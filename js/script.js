@@ -1,2 +1,7 @@
-// Empty for now – burger will be added next
-console.log('FilmHub loaded');
+const burger = document.getElementById('burger');
+const navMenu = document.querySelector('.nav-menu');
+
+burger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    burger.classList.toggle('active');
+});

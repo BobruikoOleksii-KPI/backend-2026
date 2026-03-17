@@ -29,3 +29,16 @@ header { background: #1a1a1a; padding: 1rem 0; position: sticky; top: 0; z-index
     .burger.active span:nth-child(2) { opacity: 0; }
     .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
 }
+
+/* Media queries (desktop → tablet → mobile) */
+@media (max-width: 1200px) {
+    .movie-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .movie-grid { grid-template-columns: repeat(2, 1fr); }
+    .container { padding: 0 15px; }
+}
+@media (max-width: 480px) {
+    .movie-grid { grid-template-columns: 1fr; }
+    .logo { font-size: 1.5rem; }
+}

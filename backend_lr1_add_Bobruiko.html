@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Додаткова частина ЛР №1 – Backend REST API</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'PT Serif', 'Times New Roman', serif;
+            font-size: 14pt;
+            line-height: 1.65;
+            margin: 0;
+            padding: 0;
+            color: #000;
+            background: #fff;
+        }
+        
+        .title-page {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 60px 40px 80px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .university { font-size: 15pt; margin-bottom: 45px; line-height: 1.45; }
+        .lab-number { font-size: 18pt; font-weight: bold; text-transform: uppercase; margin: 55px 0 15px; }
+        .discipline { font-size: 15pt; margin-bottom: 80px; }
+        .performer, .reviewer {
+            text-align: right;
+            max-width: 420px;
+            margin-left: auto;
+            margin-bottom: 35px;
+        }
+        .performer strong, .reviewer strong { font-weight: bold; }
+        .city-year { margin-top: 110px; font-size: 14pt; }
+
+        .main-content {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 50px 80px;
+        }
+        
+        .main-content h2 { font-size: 16pt; text-align: center; margin: 60px 0 35px; font-weight: bold; }
+        .main-content h3 { font-size: 14.5pt; margin: 45px 0 18px; font-weight: bold; }
+        .main-content p { text-align: justify; margin-bottom: 19px; }
+        .main-content pre { background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        img { max-width: 100%; border: 1px solid #ccc; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <!-- ====================== ТИТУЛЬНИЙ АРКУШ ====================== -->
+    <div class="title-page">
+        <div class="university">
+            Міністерство освіти і науки України<br>
+            Національний технічний університет України<br>
+            «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+            Факультет інформатики та обчислювальної техніки<br>
+            Кафедра обчислювальної техніки
+        </div>
+
+        <div class="lab-number">
+            ДОДАТКОВА ЧАСТИНА ЛАБОРАТОРНОЇ РОБОТИ № 1
+        </div>
+        
+        <div class="discipline">
+            з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+            на тему «Розробка простого REST API на Node.js + Express.js»
+        </div>
+
+        <div class="performer">
+            <strong>ВИКОНАВ:</strong><br><br>
+            студент ІІІ курсу ФІОТ<br>
+            групи <strong>ІО-31</strong><br>
+            <strong>Бобруйко Олексій</strong>
+        </div>
+
+        <div class="reviewer">
+            <strong>ПЕРЕВІРИВ:</strong><br><br>
+            <strong>Проскура С.Л.</strong>
+        </div>
+
+        <div class="city-year">
+            Київ – 2026
+        </div>
+    </div>
+
+    <!-- ====================== ОСНОВНИЙ ЗМІСТ ====================== -->
+    <div class="main-content">
+
+        <h2>Виконання додаткової частини лабораторної роботи №1</h2>
+
+        <h3>Виконані завдання</h3>
+        <ol>
+            <li>Створено Node.js проєкт та встановлено Express.js.</li>
+            <li>Реалізовано базовий HTTP-сервер з повідомленням «Hello from Node.js server».</li>
+            <li>Створено маршрут GET /students, який повертає список студентів у форматі JSON.</li>
+            <li>Реалізовано маршрут POST /students для додавання нового студента (поля: id, name, group).</li>
+            <li>Реалізовано маршрути PUT /students/:id та DELETE /students/:id для оновлення та видалення студента.</li>
+        </ol>
+
+        <h3>Ключовий код сервера (server.js)</h3>
+        <pre><code>const express = require("express");
+const app = express();
+app.use(express.json());
+
+let students = [ ... ];
+
+app.get("/students", (req, res) => res.json(students));
+app.post("/students", (req, res) => { ... });
+app.put("/students/:id", (req, res) => { ... });
+app.delete("/students/:id", (req, res) => { ... });
+
+app.listen(3000, () => console.log("Server started on port 3000"));
+</code></pre>
+
+        <h3>Скріншоти роботи REST API</h3>
+
+        <p><strong>Рис. 1.</strong> GET /students — початковий стан (2 студенти)</p>
+        <img src="screenshots/students-original.jpg" alt="Original students">
+
+        <p><strong>Рис. 2.</strong> Після виконання POST /students (додано нового студента)</p>
+        <img src="screenshots/students-after-post.jpg" alt="After POST">
+
+        <p><strong>Рис. 3.</strong> Після виконання PUT /students/1 (оновлено дані)</p>
+        <img src="screenshots/students-after-put.jpg" alt="After PUT">
+
+        <p><strong>Рис. 4.</strong> Після виконання DELETE /students/2 (студент видалений)</p>
+        <img src="screenshots/students-after-delete.jpg" alt="After DELETE">
+
+        <h3>Висновок</h3>
+        <p>У додатковій частині лабораторної роботи №1 успішно розроблено та протестовано простий RESTful API на базі Node.js та Express.js. Реалізовано всі необхідні CRUD-операції над сутністю «Студент». Проєкт розміщено в репозиторії GitHub: 
+        <a href="https://github.com/BobrukoOleksii-KPI/backend-2026" target="_blank">https://github.com/BobrukoOleksii-KPI/backend-2026</a>.</p>
+
+    </div>
+
+</body>
+</html>

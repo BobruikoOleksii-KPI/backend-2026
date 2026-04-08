@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №2 – FilmHub Backend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            padding: 2rem 0;
+            border-bottom: 1px solid #222;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin-bottom: 12px;
+        }
+        .sidebar ul a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar ul a:hover {
+            color: var(--accent);
+        }
+        .main-content {
+            flex: 1;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .title-page {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        h2 { font-size: 1.8rem; margin: 50px 0 25px; color: white; }
+        h3 { font-size: 1.3rem; margin: 35px 0 15px; color: var(--accent); }
+        p { margin-bottom: 18px; }
+        pre {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ</h1>
+        <p style="margin-top:10px; color:#888;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+    </div>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h3>Зміст</h3>
+            <ul>
+                <li><a href="#intro">Вибір предметної області</a></li>
+                <li><a href="#relevance">Актуальність теми</a></li>
+                <li><a href="#goal">Мета роботи</a></li>
+                <li><a href="#tasks">Завдання роботи</a></li>
+                <li><a href="#object">Об’єкт роботи</a></li>
+                <li><a href="#subject">Предмет роботи</a></li>
+                <li><a href="#business">Бізнес-логіка</a></li>
+                <li><a href="#func">Функціональні вимоги</a></li>
+                <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
+                <li><a href="#screenshots">Скріншоти</a></li>
+                <li><a href="#conclusion">Висновок</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+
+            <div class="title-page">
+                <h2 style="font-size:2rem; margin-bottom:20px;">ЛАБОРАТОРНА РОБОТА № 2</h2>
+                <p style="font-size:1.1rem; color:#aaa;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+                <p style="margin-top:30px; color:#ccc;">Виконав: студент ІІІ курсу ФІОТ<br>
+                групи <strong>GroupNumber</strong><br>
+                <strong>Name Surname</strong></p>
+                <p style="margin-top:40px; color:#888;">Київ – 2026</p>
+            </div>
+
+            <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
+
+            <h3 id="relevance">Актуальність теми</h3>
+            <p>У сучасних веб-застосунках, таких як FilmHub, критично важливо мати надійний та масштабований backend для зберігання й обробки даних. Використання бази даних MySQL у поєднанні з ORM-бібліотекою Sequelize дозволяє забезпечити персистентність даних, зручну роботу зі зв’язками між таблицями та швидке виконання CRUD-операцій, що є необхідною умовою для повноцінного функціонування онлайн-каталогу фільмів.</p>
+
+            <h3 id="goal">Мета роботи</h3>
+            <p>Метою лабораторної роботи було розробити серверну частину веб-застосунку FilmHub шляхом створення бази даних у MySQL, підключення Node.js до бази даних, виконання SQL-запитів через пакет mysql2, а також освоєння роботи з ORM Sequelize для створення моделей даних та реалізації зв’язку One-to-Many між ними.</p>
+
+            <h3 id="tasks">Завдання роботи</h3>
+            <ol>
+                <li>Створити базу даних, яка буде використовуватись веб-застосунком FilmHub.</li>
+                <li>Створити таблиці у базі даних (users та posts).</li>
+                <li>Виконати SQL-запити (SELECT, INSERT, UPDATE, DELETE) через пакет mysql2.</li>
+                <li>Підключити Node.js до MySQL.</li>
+                <li>Освоїти використання ORM Sequelize.</li>
+                <li>Створити моделі User та Post.</li>
+                <li>Реалізувати зв’язок One-to-Many між моделями.</li>
+            </ol>
+
+            <h3 id="object">Об’єкт роботи</h3>
+            <p>Процес розробки серверної частини веб-застосунків з використанням реляційних баз даних та сучасних інструментів backend-розробки.</p>
+
+            <h3 id="subject">Предмет роботи</h3>
+            <p>Підключення Node.js до MySQL, виконання SQL-запитів через пакет mysql2, використання ORM Sequelize для створення моделей даних та реалізації зв’язку One-to-Many між таблицями.</p>
+
+            <h3 id="business">Бізнес-логіка роботи</h3>
+            <p>Бізнес-логіка системи FilmHub передбачає зберігання інформації про користувачів та їхні публікації (пости). Кожен користувач може мати багато постів, а кожен пост належить лише одному користувачеві. Система повинна забезпечувати створення, читання, оновлення та видалення як користувачів, так і їхніх постів, з підтримкою цілісності даних через зв’язок One-to-Many.</p>
+
+            <h3 id="func">Функціональні вимоги</h3>
+            <ol>
+                <li>Підключення Node.js до бази даних MySQL через пакет mysql2.</li>
+                <li>Виконання базових SQL-запитів (SELECT, INSERT, UPDATE, DELETE) безпосередньо з Node.js.</li>
+                <li>Створення моделей даних User та Post за допомогою ORM Sequelize.</li>
+                <li>Реалізація зв’язку One-to-Many між моделями User і Post.</li>
+                <li>Підтримка повного набору CRUD-операцій над сутностями через API.</li>
+                <li>Автоматичне створення таблиць у базі даних при запуску сервера.</li>
+            </ol>
+
+            <h3 id="nonfunc">Нефункціональні вимоги</h3>
+            <ol>
+                <li>Використання асинхронного підходу (async/await) для роботи з базою даних.</li>
+                <li>Забезпечення цілісності даних завдяки зовнішнім ключам та каскадному видаленню.</li>
+                <li>Чітке розділення коду на конфігурацію, моделі та маршрути.</li>
+                <li>Логування помилок підключення та виконання запитів.</li>
+                <li>Підтримка сучасних практик розробки (Sequelize ORM замість raw SQL у бізнес-логіці).</li>
+                <li>Кросплатформенність та можливість легкого розгортання на іншому комп’ютері.</li>
+            </ol>
+
+            <h3 id="github-link">Посилання на репозиторій GitHub</h3>
+            <p>
+                <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
+                target="_blank" 
+                style="color:#0066cc; text-decoration:underline; font-weight:bold;">
+                https://github.com/BobruikoOleksii-KPI/backend-2026
+                </a>
+            </p>
+
+            <h3 id="screenshots">Скріншоти роботи</h3>
+
+            <p><strong>Рис. 1.</strong> Створена база даних та таблиці у MySQL Workbench</p>
+            <img src="backend/screenshots/mysql-tables.PNG" alt="MySQL tables">
+
+            <p><strong>Рис. 2.</strong> Пости з користувачами, отримані через mysql2 (ліворуч) і Sequelize (праворуч)</p>
+            <img src="backend/screenshots/crud-posts.PNG" alt="CRUD queries">
+
+            <p><strong>Рис. 3.</strong> Тестове створення користувача та посту</p>
+            <img src="backend/screenshots/test-creation.PNG" alt="Test creation">
+
+            <h3 id="conclusion">Висновок</h3>
+            <p>В ході виконання лабораторної роботи було успішно реалізовано серверну частину веб-застосунку FilmHub. Було створено базу даних у MySQL, виконано підключення Node.js до бази даних через пакет mysql2, освоєно виконання SQL-запитів, а також опановано роботу з ORM-бібліотекою Sequelize. Створено моделі User та Post і реалізовано зв’язок One-to-Many між ними. Розроблено повноцінний REST API з підтримкою CRUD-операцій. Отриманий досвід дозволить ефективно інтегрувати backend з фронтендом FilmHub у подальших лабораторних роботах.</p>
+
+        </div>
+    </div>
+
+</body>
+</html>

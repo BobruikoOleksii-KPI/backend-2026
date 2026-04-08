@@ -1,5 +1,7 @@
 const express = require('express');
 const sequelize = require('./config/database');
+const mysqlPool = require('./config/database-mysql2');
+
 const User = require('./models/User');
 const Post = require('./models/Post');
 
@@ -8,13 +10,16 @@ app.use(express.json());
 
 const PORT = 3000;
 
-// Sync models
+// ====================== DATABASE SYNC ======================
 sequelize.sync({ force: false })
-    .then(() => console.log('Database tables synced successfully'))
-    .catch(err => console.error('Error syncing tables:', err));
+    .then(() => console.log('Sequelize tables synced successfully'))
+    .catch(err => console.error('Sequelize sync error:', err));
 
+// ====================== BASIC ROUTE ======================
 app.get('/', (req, res) => {
-    res.json({ message: 'FilmHub Backend is running with Sequelize!' });
+    res.json({ 
+        message: 'FilmHub Backend is running (Sequelize + raw mysql2)' 
+    });
 });
 
 // ====================== TEST ROUTE ======================
@@ -41,8 +46,52 @@ app.get('/test', async (req, res) => {
     }
 });
 
-// ====================== CRUD for Posts ======================
+// ====================== RAW mysql2 QUERIES ======================
+app.get('/raw/posts', async (req, res) => {
+    try {
+        const [rows] = await mysqlPool.execute('SELECT * FROM posts ORDER BY createdAt DESC');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
+app.post('/raw/posts', async (req, res) => {
+    const { title, content } = req.body;
+    try {
+        const [result] = await mysqlPool.execute(
+            'INSERT INTO posts (title, content) VALUES (?, ?)',
+            [title, content]
+        );
+        res.status(201).json({ id: result.insertId, title, content });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put('/raw/posts/:id', async (req, res) => {
+    const { title, content } = req.body;
+    try {
+        await mysqlPool.execute(
+            'UPDATE posts SET title = ?, content = ? WHERE id = ?',
+            [title, content, req.params.id]
+        );
+        res.json({ message: "Post updated successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.delete('/raw/posts/:id', async (req, res) => {
+    try {
+        await mysqlPool.execute('DELETE FROM posts WHERE id = ?', [req.params.id]);
+        res.json({ message: "Post deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ====================== SEQUELIZE CRUD ======================
 app.get('/posts', async (req, res) => {
     try {
         const posts = await Post.findAll({
@@ -97,5 +146,5 @@ app.delete('/posts/:id', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`FilmHub Backend running on http://localhost:${PORT}`);
 });

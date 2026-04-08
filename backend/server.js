@@ -1,37 +1,35 @@
 const express = require('express');
-const db = require('./config/database');
+const sequelize = require('./config/database');
+const User = require('./models/User');
+const Post = require('./models/Post');
 
 const app = express();
 app.use(express.json());
 
 const PORT = 3000;
 
-app.get('/', async (req, res) => {
-    try {
-        const [rows] = await db.execute('SELECT 1 as test');
-        res.json({ message: 'Connection successful', dbTest: rows });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+sequelize.sync({ force: false })
+    .then(() => console.log('Database tables synced successfully'))
+    .catch(err => console.error('Sync error:', err));
+
+app.get('/', (req, res) => {
+    res.json({ message: 'FilmHub Backend is running with Sequelize + One-to-Many relationship!' });
 });
 
-app.get('/posts', async (req, res) => {
+app.get('/test', async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT * FROM posts');
-        res.json(rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+        const user = await User.create({
+            name: "Іван Петренко",
+            email: `ivan_${Date.now()}@example.com`
+        });
 
-app.post('/posts', async (req, res) => {
-    const { title, content } = req.body;
-    try {
-        const [result] = await db.execute(
-            'INSERT INTO posts (title, content) VALUES (?, ?)',
-            [title, content]
-        );
-        res.status(201).json({ id: result.insertId, title, content });
+        const post = await Post.create({
+            title: "Мій перший пост",
+            content: "Це тестовий пост створений через Sequelize",
+            userId: user.id
+        });
+
+        res.json({ message: "Test user and post created successfully", user, post });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

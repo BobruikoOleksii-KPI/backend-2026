@@ -20,8 +20,8 @@
 - `npm install`
 - У MySQL Workbench вручну створити пусту базу даних:
 -    `CREATE DATABASE web_backend_lab` 
--       `CHARACTER SET utf8mb4` 
--       `COLLATE utf8mb4_unicode_ci`;
+-    `CHARACTER SET utf8mb4` 
+-    `COLLATE utf8mb4_unicode_ci`;
 - `node server.js`
 
 Сервер буде доступний за адресою: http://localhost:3000

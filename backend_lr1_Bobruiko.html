@@ -5,293 +5,225 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Лабораторна робота №1 – FilmHub</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap');
         
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'PT Serif', 'Times New Roman', serif;
-            font-size: 14pt;
-            line-height: 1.65;
-            margin: 0;
-            padding: 0;
-            color: #000;
-            background: #fff;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
         }
-        
-        .title-page {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 60px 40px 80px;
+        .header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            padding: 2rem 0;
+            border-bottom: 1px solid #222;
             text-align: center;
-            min-height: 100vh;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            gap: 40px;
+            padding: 40px 20px;
         }
-        
-        .university {
-            font-size: 15pt;
-            margin-bottom: 45px;
-            line-height: 1.45;
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
         }
-        
-        .lab-number {
-            font-size: 18pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin: 55px 0 15px;
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.1rem;
         }
-        
-        .discipline {
-            font-size: 15pt;
-            margin-bottom: 80px;
+        .sidebar ul {
+            list-style: none;
         }
-        
-        .performer, .reviewer {
-            text-align: right;
-            max-width: 420px;
-            margin-left: auto;
-            margin-bottom: 35px;
+        .sidebar ul li {
+            margin-bottom: 12px;
         }
-        
-        .performer strong, .reviewer strong {
-            font-weight: bold;
+        .sidebar ul a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
         }
-        
-        .city-year {
-            margin-top: 110px;
-            font-size: 14pt;
+        .sidebar ul a:hover {
+            color: var(--accent);
+        }
+        .main-content {
+            flex: 1;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .title-page {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        h2 { font-size: 1.8rem; margin: 50px 0 25px; color: white; }
+        h3 { font-size: 1.3rem; margin: 35px 0 15px; color: var(--accent); }
+        p { margin-bottom: 18px; }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- ====================== ТИТУЛЬНИЙ АРКУШ ====================== -->
-    <div class="title-page">
-        <div class="university">
-            Міністерство освіти і науки України<br>
-            Національний технічний університет України<br>
-            «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
-            Факультет інформатики та обчислювальної техніки<br>
-            Кафедра обчислювальної техніки
-        </div>
-
-        <div class="lab-number">
-            ЛАБОРАТОРНА РОБОТА № 1
-        </div>
-        
-        <div class="discipline">
-            з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
-            на тему «Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.»
-        </div>
-
-        <div class="performer">
-            <strong>ВИКОНАВ:</strong><br><br>
-            студент ІІІ курсу ФІОТ<br>
-            групи <strong>ІО-31</strong><br>
-            <strong>Бобруйко Олексій</strong>
-        </div>
-
-        <div class="reviewer">
-            <strong>ПЕРЕВІРИВ:</strong><br><br>
-            <strong>Проскура С.Л.</strong>
-        </div>
-
-        <div class="city-year">
-            Київ – 2026
-        </div>
+    <div class="header">
+        <h1>ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ</h1>
+        <p style="margin-top:10px; color:#888;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
     </div>
 
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лабораторна робота №1 – FilmHub</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap');
-        
-        body {
-            font-family: 'PT Serif', 'Times New Roman', serif;
-            font-size: 14pt;
-            line-height: 1.65;
-            margin: 0;
-            padding: 0;
-            color: #000;
-            background: #fff;
-        }
-        
-        /* ====================== TITLE PAGE ====================== */
-        .title-page {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 60px 40px 80px;
-            text-align: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .university { font-size: 15pt; margin-bottom: 45px; line-height: 1.45; }
-        .lab-number { font-size: 18pt; font-weight: bold; text-transform: uppercase; margin: 55px 0 15px; }
-        .discipline { font-size: 15pt; margin-bottom: 80px; }
-        .performer, .reviewer {
-            text-align: right;
-            max-width: 420px;
-            margin-left: auto;
-            margin-bottom: 35px;
-        }
-        .performer strong, .reviewer strong { font-weight: bold; }
-        .city-year { margin-top: 110px; font-size: 14pt; }
+    <div class="container">
 
-        /* ====================== MAIN CONTENT ====================== */
-        .main-content {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 0 50px 80px;
-        }
-        
-        .main-content h2 {
-            font-size: 16pt;
-            text-align: center;
-            margin: 60px 0 35px;
-            font-weight: bold;
-        }
-        
-        .main-content h3 {
-            font-size: 14.5pt;
-            margin: 45px 0 18px;
-            font-weight: bold;
-        }
-        
-        .main-content p {
-            text-align: justify;
-            margin-bottom: 19px;
-        }
-        
-        .main-content ol {
-            margin-bottom: 22px;
-            padding-left: 25px;
-        }
-        
-        .main-content ol li {
-            margin-bottom: 8px;
-        }
-        
-        .main-content strong {
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
+        <div class="sidebar">
+            <h3>Зміст</h3>
+            <ul>
+                <li><a href="#intro">Вибір предметної області</a></li>
+                <li><a href="#relevance">Актуальність теми</a></li>
+                <li><a href="#goal">Мета роботи</a></li>
+                <li><a href="#tasks">Завдання роботи</a></li>
+                <li><a href="#object">Об’єкт роботи</a></li>
+                <li><a href="#subject">Предмет роботи</a></li>
+                <li><a href="#business">Бізнес-логіка</a></li>
+                <li><a href="#func">Функціональні вимоги</a></li>
+                <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
+                <li><a href="#usecase">Use-case діаграма</a></li>
+                <li><a href="#er">ER-діаграма</a></li>
+                <li><a href="#screenshots">Скріншоти інтерфейсу</a></li>
+                <li><a href="#conclusion">Висновок</a></li>
+            </ul>
+        </div>
 
-    <!-- ====================== ОСНОВНИЙ ЗМІСТ ====================== -->
-    <div class="main-content">
+        <div class="main-content">
 
-        <h1 style="text-align:center; font-size:18pt; margin-bottom:50px;">Зміст</h1>
-        <ol>
-            <li><a href="#intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку</a></li>
-            <li><a href="#relevance">Актуальність теми</a></li>
-            <li><a href="#goal">Мета роботи</a></li>
-            <li><a href="#tasks">Завдання роботи</a></li>
-            <li><a href="#object">Об’єкт роботи</a></li>
-            <li><a href="#subject">Предмет роботи</a></li>
-            <li><a href="#business">Бізнес-логіка роботи</a></li>
-            <li><a href="#func">Функціональні вимоги</a></li>
-            <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
-            <li><a href="#usecase">Use-case діаграма</a></li>
-            <li><a href="#er">ER-діаграма даних</a></li>
-            <li><a href="#conclusion">Висновок</a></li>
-        </ol>
+            <div class="title-page">
+                <h2 style="font-size:2rem; margin-bottom:20px;">ЛАБОРАТОРНА РОБОТА № 1</h2>
+                <p style="font-size:1.1rem; color:#aaa;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+                <p style="margin-top:30px; color:#ccc;">Виконав: студент ІІІ курсу ФІОТ<br>
+                групи <strong>ІО-31</strong><br>
+                <strong>Бобруйко Олексій</strong></p>
+                <p style="margin-top:40px; color:#888;">Київ – 2026</p>
+            </div>
 
-        <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
+            <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
 
-        <h3 id="relevance">Актуальність теми</h3>
-        <p>У сучасному світі кількість доступного кіноконтенту зростає щодня. Користувачі потребують зручного інструменту для швидкого пошуку та ознайомлення з інформацією про фільми на будь-яких пристроях. Розробка адаптивного веб-застосунку "FilmHub" дозволяє вирішити проблему зручного доступу до каталогу фільмів, забезпечуючи приємний користувацький досвід незалежно від розміру екрану.</p>
+            <h3 id="relevance">Актуальність теми</h3>
+            <p>У сучасному світі кількість доступного кіноконтенту зростає щодня. Користувачі потребують зручного інструменту для швидкого пошуку та ознайомлення з інформацією про фільми на будь-яких пристроях. Розробка адаптивного веб-застосунку "FilmHub" дозволяє вирішити проблему зручного доступу до каталогу фільмів.</p>
 
-        <h3 id="goal">Мета роботи</h3>
-        <p>Метою лабораторної роботи було розробити адаптивний веб-застосунок FilmHub — сучасний онлайн-каталог фільмів з респонсивним дизайном. У рамках роботи буде реалізовано повноцінний фронтенд інтерфейсу: семантичну структуру сторінки (header, main, footer), адаптивну навігацію з бургер-меню, інтерактивну сітку інформаційних карток фільмів із постерами, а також візуальні ефекти та анімації.</p>
+            <h3 id="goal">Мета роботи</h3>
+            <p>Метою лабораторної роботи було розробити адаптивний веб-застосунок FilmHub — сучасний онлайн-каталог фільмів з респонсивним дизайном. У рамках роботи реалізовано повноцінний фронтенд інтерфейсу: семантичну структуру сторінки, адаптивну навігацію з бургер-меню, інтерактивну сітку фільмів, візуальні ефекти та анімації.</p>
 
-        <h3 id="tasks">Завдання роботи</h3>
-        <ol>
-          <li>Проаналізувати предметну область та сформулювати вимоги до системи.</li>
-          <li>Побудувати Use-case та ER-діаграми.</li>
-          <li>Реалізувати основні структурні компоненти інтерфейсу (header, main, footer).</li>
-          <li>Забезпечити адаптивність дизайну за допомогою Flexbox/Grid, media queries та відносних одиниць.</li>
-          <li>Реалізувати бургер-меню та візуальні ефекти.</li>
-          <li>Організувати файлову структуру проєкту та розмістити його в GitHub репозиторії.</li>
-        </ol>
+            <h3 id="tasks">Завдання роботи</h3>
+            <ol>
+              <li>Проаналізувати предметну область та сформулювати вимоги до системи.</li>
+              <li>Побудувати Use-case та ER-діаграми.</li>
+              <li>Реалізувати основні структурні компоненти інтерфейсу (header, main, footer).</li>
+              <li>Забезпечити адаптивність дизайну за допомогою Flexbox/Grid, media queries та відносних одиниць.</li>
+              <li>Реалізувати бургер-меню та візуальні ефекти.</li>
+              <li>Організувати файлову структуру проєкту та розмістити його в GitHub репозиторії.</li>
+            </ol>
 
-        <h3 id="object">Об’єкт роботи:</h3>
-        <p>Онлайн-каталоги кінематографічного контенту</p>
+            <h3 id="object">Об’єкт роботи:</h3>
+            <p>Онлайн-каталоги кінематографічного контенту</p>
 
-        <h3 id="subject">Предмет роботи:</h3>
-        <p>Адаптивний веб-інтерфейс та функціональність системи "FilmHub"</p>
+            <h3 id="subject">Предмет роботи:</h3>
+            <p>Адаптивний веб-інтерфейс та функціональність системи "FilmHub"</p>
 
-        <h3 id="business">Бізнес-логіка роботи:</h3>
-        <p>Користувач відкриває головну сторінку, де бачить сітку популярних фільмів у вигляді інформаційних карток. Кожна картка містить постер, назву, рік виходу, рейтинг та жанр. Користувач може переглядати детальну інформацію про фільм, фільтрувати контент за жанрами та шукати фільми</p>
+            <h3 id="business">Бізнес-логіка роботи:</h3>
+            <p>Користувач відкриває головну сторінку, де бачить сітку популярних фільмів у вигляді інформаційних карток. Кожна картка містить постер, назву, рік виходу, рейтинг та жанр. Користувач може переглядати детальну інформацію про фільм, фільтрувати контент за жанрами та шукати фільми</p>
 
-        <h3 id="func">Функціональні вимоги</h3>
-        <ol>
-          <li>Відображення фільмів у вигляді адаптивної сітки карток.</li>
-          <li>Адаптивне навігаційне меню з бургер-меню на мобільних пристроях.</li>
-          <li>Header з логотипом "FilmHub" та навігацією (Головна, Каталог, Жанри, Про нас).</li>
-          <li>Footer з контактною інформацією.</li>
-          <li>Візуальні ефекти при наведенні на картки та плавне відкриття меню.</li>
-        </ol>
+            <h3 id="func">Функціональні вимоги</h3>
+            <ol>
+              <li>Відображення фільмів у вигляді адаптивної сітки карток.</li>
+              <li>Адаптивне навігаційне меню з бургер-меню на мобільних пристроях.</li>
+              <li>Header з логотипом "FilmHub" та навігацією (Головна, Каталог, Жанри, Про нас).</li>
+              <li>Footer з контактною інформацією.</li>
+              <li>Візуальні ефекти при наведенні на картки та плавне відкриття меню.</li>
+            </ol>
 
-        <h3 id="nonfunc">Нефункціональні вимоги</h3>
-        <ol>
-          <li>Повна адаптивність на пристроях (desktop, tablet, mobile) за допомогою media queries.</li>
-          <li>Використання Flexbox або CSS Grid.</li>
-          <li>Відносні одиниці вимірювання (rem, %, vw, vh).</li>
-          <li>Сучасний чистий дизайн.</li>
-          <li>Швидке завантаження сторінки.</li>
-          <li>Кросбраузерна сумісність.</li>
-        </ol>
+            <h3 id="nonfunc">Нефункціональні вимоги</h3>
+            <ol>
+              <li>Повна адаптивність на пристроях (desktop, tablet, mobile) за допомогою media queries.</li>
+              <li>Використання Flexbox або CSS Grid.</li>
+              <li>Відносні одиниці вимірювання (rem, %, vw, vh).</li>
+              <li>Сучасний чистий дизайн.</li>
+              <li>Швидке завантаження сторінки.</li>
+              <li>Кросбраузерна сумісність.</li>
+            </ol>
 
-        <h3 id="github-link">Посилання на репозиторій GitHub</h3>
-        <p>
-            <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
-            target="_blank" 
-            style="color:#0066cc; text-decoration:underline; font-weight:bold;">
-            https://github.com/BobruikoOleksii-KPI/backend-2026
-            </a>
-        </p>
-        
-        <h3 id="usecase">Use-case діаграма</h3>
-        <p>Актори: Гість (незареєстрований користувач), Зареєстрований користувач, Адміністратор.<br>
-        Головні use cases: Перегляд каталогу, Пошук фільму, Перегляд деталей фільму, Фільтрація за жанром, Додавання до улюблених, Управління каталогом (для адміністратора).</p>
-        <p><strong>Рис. 1.</strong> Use-case діаграма системи FilmHub</p>
-        <img src="screenshots/usecase.png" alt="Use-case діаграма" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
+            <h3 id="github-link">Посилання на репозиторій GitHub</h3>
+            <p>
+                <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
+                target="_blank" 
+                style="color:#0066cc; text-decoration:underline; font-weight:bold;">
+                https://github.com/BobruikoOleksii-KPI/backend-2026
+                </a>
+            </p>
 
-        <h3 id="er">ER-діаграма даних</h3>
-        <p>Сутності:<br>
-        • Film (id, title, year, rating, description, poster_url)<br>
-        • Genre (id, name)<br>
-        • Actor (id, name)<br>
-        • Director (id, name)</p>
-        <p>Відносини:<br>
-        • Film – many-to-many – Genre<br>
-        • Film belongs to one Director<br>
-        • Film has many Actors</p>
-        <p><strong>Рис. 2.</strong> ER-діаграма даних для системи FilmHub</p>
-        <img src="screenshots/er.png" alt="ER-діаграма" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
-        
-        <h3>Скріншоти інтерфейсу</h3>
+            <h3 id="usecase">Use-case діаграма</h3>
+            <p>Актори: Гість (незареєстрований користувач), Зареєстрований користувач, Адміністратор.<br>
+            Головні use cases: Перегляд каталогу, Пошук фільму, Перегляд деталей фільму, Фільтрація за жанром, Додавання до улюблених, Управління каталогом (для адміністратора).</p>
+            <p><strong>Рис. 1.</strong> Use-case діаграма системи FilmHub</p>
+            <img src="frontend/screenshots/usecase.png" alt="Use-case діаграма" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
+    
+            <h3 id="er">ER-діаграма даних</h3>
+            <p>Сутності:<br>
+            • Film (id, title, year, rating, description, poster_url)<br>
+            • Genre (id, name)<br>
+            • Actor (id, name)<br>
+            • Director (id, name)</p>
+            <p>Відносини:<br>
+            • Film – many-to-many – Genre<br>
+            • Film belongs to one Director<br>
+            • Film has many Actors</p>
+            <p><strong>Рис. 2.</strong> ER-діаграма даних для системи FilmHub</p>
+            <img src="frontend/screenshots/er.png" alt="ER-діаграма" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
+ 
+            <h3>Скріншоти інтерфейсу</h3>
 
-        <p><strong>Рис. 3.</strong> Загальний вигляд веб-застосунку «FilmHub» на десктопному пристрої</p>
-        <img src="screenshots/desktop.jpg" alt="Desktop view" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
+            <p><strong>Рис. 3.</strong> Загальний вигляд веб-застосунку «FilmHub» на десктопному пристрої</p>
+            <img src="frontend/screenshots/desktop.jpg" alt="Desktop view" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
 
-        <p><strong>Рис. 4.</strong> Мобільний вигляд з відкритим бургер-меню</p>
-        <img src="screenshots/burger.jpg" alt="Burger menu open" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
+            <p><strong>Рис. 4.</strong> Мобільний вигляд з відкритим бургер-меню</p>
+            <img src="frontend/screenshots/burger.jpg" alt="Burger menu open" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
 
-        <p><strong>Рис. 5.</strong> Демонстрація взаємодії з навігаційними посиланнями (спливаюче повідомлення-заглушка)</p>
-        <img src="screenshots/placeholder.jpg" alt="Navigation placeholder popup" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
+            <p><strong>Рис. 5.</strong> Демонстрація взаємодії з навігаційними посиланнями (спливаюче повідомлення-заглушка)</p>
+            <img src="frontend/screenshots/placeholder.jpg" alt="Navigation placeholder popup" style="max-width:100%; border:1px solid #ccc; margin:15px 0;">
 
-        <h3 id="conclusion">Висновок</h3>
-        <p>В ході виконання лабораторної роботи було сформульовано ключові складові опису інформаційної системи, побудовано моделі та розроблено адаптивний інтерфейс веб-застосунку "FilmHub". Набуто практичні навички створення респонсивного дизайну, роботи з Git та GitHub. Можливе подальше удосконалення — підключення бази даних та backend-логіки.</p>
+            <h3 id="conclusion">Висновок</h3>
+            <p>В ході виконання лабораторної роботи було сформульовано ключові складові опису інформаційної системи, побудовано моделі та розроблено адаптивний інтерфейс веб-застосунку "FilmHub". Набуто практичні навички створення респонсивного дизайну, роботи з Git та GitHub.</p>
 
+        </div>
     </div>
 
 </body>

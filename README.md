@@ -2,23 +2,6 @@
 
 Репозиторій для лабораторних робіт з дисципліни «Web-орієнтовані технології. Backend-розробки».
 
-## Структура проєкту
-backend-2026/
-├── frontend/                 ← Лабораторна №1 (адаптивний фронтенд)
-│   ├── index.html
-│   ├── css/
-│   ├── js/
-│   └── assets/
-├── backend/                  ← Лабораторна №2 (Node.js + Sequelize)
-│   ├── config/
-│   ├── models/
-│   ├── server.js
-│   └── package.json
-├── backend_lr1.html
-├── backend_lr2.html
-├── screenshots/
-└── README.md
-
 ## Як запустити
 
 ### 1. Frontend (Lab 1)
@@ -33,8 +16,12 @@ cd frontend
 npx serve
 
 ### 2. Backend (Lab 2)
-Bashcd backend
+cd backend
 npm install
+У MySQL Workbench вручну створити пусту базу даних:
+    CREATE DATABASE web_backend_lab 
+        CHARACTER SET utf8mb4 
+        COLLATE utf8mb4_unicode_ci;
 node server.js
 
 Сервер буде доступний за адресою: http://localhost:3000

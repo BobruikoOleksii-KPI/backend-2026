@@ -123,13 +123,45 @@
         <div class="main-content">
 
             <!-- Title Page -->
-            <div class="title-page">
-                <h2 style="font-size:2rem; margin-bottom:20px;">ДОДАТКОВА ЧАСТИНА ЛАБОРАТОРНОЇ РОБОТИ № 1</h2>
-                <p style="font-size:1.1rem; color:#aaa;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
-                <p style="margin-top:30px; color:#ccc;">Виконав: студент ІІІ курсу ФІОТ<br>
-                групи <strong>ІО-31</strong><br>
-                <strong>Бобруйко Олексій</strong></p>
-                <p style="margin-top:40px; color:#888;">Київ – 2026</p>
+            <div class="title-page" style="display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+                <div style="flex: 1;">
+                    <div class="university">
+                        Міністерство освіти і науки України<br>
+                        Національний технічний університет України<br>
+                        «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+                        Факультет інформатики та обчислювальної техніки<br>
+                        Кафедра обчислювальної техніки
+                    </div>
+
+                    <div class="lab-number">
+                        ДОДАТКОВА ЧАСТИНА ЛАБОРАТОРНОЇ РОБОТИ № 1
+                    </div>
+        
+                    <div class="discipline">
+                        з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+                        на тему «Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.»
+                    </div>
+
+                    <div class="performer">
+                        <strong>ВИКОНАВ:</strong><br><br>
+                        студент ІІІ курсу ФІОТ<br>
+                        групи <strong>ІО-31</strong><br>
+                        <strong>Бобруйко Олексій</strong>
+                    </div>
+
+                    <div class="reviewer">
+                        <strong>ПЕРЕВІРИВ:</strong><br><br>
+                        <strong>Проскура С.Л.</strong>
+                    </div>
+
+                    <div class="city-year">
+                        Київ – 2026
+                    </div>
+               </div>
+
+                <img src="frontend/screenshots/studentphoto.PNG" 
+                     alt="Фото студента" 
+                     style="width: 180px; height: 240px; object-fit: cover; border-radius: 12px; border: 3px solid #222; box-shadow: 0 10px 20px rgba(0,0,0,0.6);">
             </div>
 
             <h2 id="intro">Виконання додаткової частини лабораторної роботи №1</h2>
@@ -161,15 +193,19 @@ app.listen(3000, () => console.log("Server started on port 3000"));
             <h3 id="screenshots">Скріншоти роботи REST API</h3>
 
             <p><strong>Рис. 1.</strong> GET /students — початковий стан (2 студенти)</p>
+            <p>На даному скріншоті відображено результат виконання GET-запиту до ендпоінту /students у початковому стані системи. Сервер повертає масив із двох записів, що демонструє коректне підключення Node.js до бази даних і успішне читання даних через Sequelize. Чітко видно структуру об’єктів (id, name, group), яка була визначена в моделі Student.</p>
             <img src="frontend/screenshots/students-original.jpg" alt="Original students">
 
             <p><strong>Рис. 2.</strong> Після виконання POST /students (додано нового студента)</p>
+            <p>Цей скріншот демонструє роботу POST-запиту, який успішно створює нового студента та додає його до бази даних. Після виконання запиту список студентів збільшився до трьох записів. Даний результат підтверджує коректну реалізацію створення записів через Sequelize та автоматичне призначення нового id.</p>
             <img src="frontend/screenshots/students-after-post.jpg" alt="After POST">
 
-            <p><strong>Рис. 3.</strong> Після виконання PUT /students/1 (оновлено дані)</p>
+            <p><strong>Рис. 3.</strong> Після виконання PUT /students/1 (оновлено дані студента)</p>
+            <p>На скріншоті показано результат оновлення даних першого студента за допомогою PUT-запиту. Поле name було змінено на «Олександр Іванов (оновлено)». Це демонструє повноцінну роботу операції UPDATE через Sequelize та підтверджує, що система правильно обробляє часткове або повне оновлення записів.</p>
             <img src="frontend/screenshots/students-after-put.jpg" alt="After PUT">
 
             <p><strong>Рис. 4.</strong> Після виконання DELETE /students/2 (студент видалений)</p>
+            <p>На цьому скріншоті видно результат виконання DELETE-запиту — другий студент був успішно видалений з бази даних. У списку залишився лише один запис. Даний приклад ілюструє коректну роботу операції видалення та підтримку цілісності даних завдяки зв’язку One-to-Many.</p>
             <img src="frontend/screenshots/students-after-delete.jpg" alt="After DELETE">
 
             <h3 id="conclusion">Висновок</h3>

@@ -125,13 +125,45 @@
 
         <div class="main-content">
 
-            <div class="title-page">
-                <h2 style="font-size:2rem; margin-bottom:20px;">ЛАБОРАТОРНА РОБОТА № 2</h2>
-                <p style="font-size:1.1rem; color:#aaa;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
-                <p style="margin-top:30px; color:#ccc;">Виконав: студент ІІІ курсу ФІОТ<br>
-                групи <strong>GroupNumber</strong><br>
-                <strong>Name Surname</strong></p>
-                <p style="margin-top:40px; color:#888;">Київ – 2026</p>
+            <div class="title-page" style="display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+                <div style="flex: 1;">
+                    <div class="university">
+                        Міністерство освіти і науки України<br>
+                        Національний технічний університет України<br>
+                        «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+                        Факультет інформатики та обчислювальної техніки<br>
+                        Кафедра обчислювальної техніки
+                    </div>
+
+                    <div class="lab-number">
+                        ЛАБОРАТОРНА РОБОТА № 2
+                    </div>
+        
+                    <div class="discipline">
+                        з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+                        на тему «Створення бази даних у MySQL. Підключення Node.js до MySQL. Робота з ORM Sequelize.»
+                    </div>
+
+                    <div class="performer">
+                        <strong>ВИКОНАВ:</strong><br><br>
+                        студент ІІІ курсу ФІОТ<br>
+                        групи <strong>ІО-31</strong><br>
+                        <strong>Бобруйко Олексій</strong>
+                    </div>
+
+                    <div class="reviewer">
+                        <strong>ПЕРЕВІРИВ:</strong><br><br>
+                        <strong>Проскура С.Л.</strong>
+                    </div>
+
+                    <div class="city-year">
+                        Київ – 2026
+                    </div>
+               </div>
+
+                <img src="backend/screenshots/studentphoto.PNG" 
+                     alt="Фото студента" 
+                     style="width: 180px; height: 240px; object-fit: cover; border-radius: 12px; border: 3px solid #222; box-shadow: 0 10px 20px rgba(0,0,0,0.6);">
             </div>
 
             <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
@@ -194,12 +226,15 @@
             <h3 id="screenshots">Скріншоти роботи</h3>
 
             <p><strong>Рис. 1.</strong> Створена база даних та таблиці у MySQL Workbench</p>
+            <p>На скріншоті відображено результат створення бази даних та двох таблиць, необхідних для роботи застосунку FilmHub. Таблиця users зберігає інформацію про користувачів, а таблиця posts — про їхні публікації. Чітко видно автоматично створені Sequelize-поля (id, createdAt, updatedAt) та зовнішній ключ userId, що реалізує зв’язок One-to-Many. Це демонструє успішне застосування ORM для автоматичного створення структури бази даних.</p>
             <img src="backend/screenshots/mysql-tables.PNG" alt="MySQL tables">
 
             <p><strong>Рис. 2.</strong> Пости з користувачами, отримані через mysql2 (ліворуч) і Sequelize (праворуч)</p>
+            <p>Даний скріншот демонструє порівняння двох підходів до отримання даних. Ліва частина показує результат виконання raw SQL-запиту через пакет mysql2 (ендпоінт /raw/posts). Права частина відображає результат того ж запиту, але виконаний через Sequelize ORM (ендпоінт /posts) з використанням методу findAll() та include: User. Обидва запити повертають однакові дані, але Sequelize автоматично підтягує пов’язану інформацію про користувача, що значно спрощує роботу з реляційними даними.</p>
             <img src="backend/screenshots/crud-posts.PNG" alt="CRUD queries">
 
             <p><strong>Рис. 3.</strong> Тестове створення користувача та посту</p>
+            <p>На скріншоті представлено результат виконання тестового GET-запиту /test. Під час виконання запиту автоматично створюється новий користувач і пов’язаний з ним пост, демонструючи роботу One-to-Many зв’язку. У відповіді сервер повертає повні об’єкти User і Post, включаючи всі поля та зв’язки. Цей тест наочно підтверджує коректність налаштування моделей та їх взаємодію з базою даних.</p>
             <img src="backend/screenshots/test-creation.PNG" alt="Test creation">
 
             <h3 id="conclusion">Висновок</h3>

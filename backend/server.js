@@ -5,8 +5,88 @@ const mysqlPool = require('./config/database-mysql2');
 const User = require('./models/User');
 const Post = require('./models/Post');
 
+// ====================== LAB 3 AUTH ======================
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+// =======================================================
+
 const app = express();
 app.use(express.json());
+
+// ====================== LAB 3: REGISTRATION & AUTHORIZATION ======================
+
+const SECRET_KEY = "secret123";        // In production → process.env.JWT_SECRET
+let users = [];                        // temporary in-memory storage (Task 11 will move to DB)
+
+// Реєстрація користувача
+app.post("/register", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Валідація (Task 3)
+    if (!email || !password) {
+      return res.status(400).json({ message: "Всі поля обов'язкові" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Пароль мінімум 6 символів" });
+    }
+
+    const userExists = users.find((u) => u.email === email);
+    if (userExists) {
+      return res.status(400).json({ message: "Користувач вже існує" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    users.push({ email, password: hashedPassword });
+
+    res.status(201).json({ message: "Користувача створено" });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// Авторизація (логін)
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = users.find((u) => u.email === email);
+    if (!user) {
+      return res.status(400).json({ message: "Користувача не знайдено" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Невірний пароль" });
+    }
+
+    const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// Захищений маршрут (профіль)
+app.get("/profile", (req, res) => {
+  const token = req.headers["authorization"];
+
+  if (!token) {
+    return res.status(401).json({ message: "Немає токена" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    res.json({ message: "Доступ дозволено", user: decoded });
+  } catch (error) {
+    res.status(401).json({ message: "Невірний токен" });
+  }
+});
+
+// ====================== END LAB 3 AUTH ======================
 
 const PORT = 3000;
 

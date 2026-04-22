@@ -17,7 +17,25 @@ app.use(express.json());
 
 const SECRET_KEY = "secret123";        // In production → process.env.JWT_SECRET
 
-// Реєстрація користувача (Task 11 — Sequelize)
+// ====================== Auth Middleware ======================
+const authenticateToken = (req, res, next) => {
+  const token = req.headers["authorization"];
+
+  if (!token) {
+    return res.status(401).json({ message: "Немає токена" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded;        // attach user data to request for later use
+    next();                    // continue to the route handler
+  } catch (error) {
+    return res.status(401).json({ message: "Невірний токен" });
+  }
+};
+// ====================== END Middleware ======================
+
+// Реєстрація користувача
 app.post("/register", async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
@@ -84,41 +102,23 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Захищений маршрут (профіль)
-app.get("/profile", (req, res) => {
-  const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(401).json({ message: "Немає токена" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    res.json({ 
-      message: "Доступ дозволено", 
-      user: decoded 
-    });
-  } catch (error) {
-    res.status(401).json({ message: "Невірний токен" });
-  }
+// Захищений маршрут (профіль) — тепер використовує middleware
+app.get("/profile", authenticateToken, (req, res) => {
+  res.json({ 
+    message: "Доступ дозволено", 
+    user: req.user 
+  });
 });
 
-// ====================== TASK 9: Logout ======================
+// ====================== Logout ======================
 app.post("/logout", (req, res) => {
   res.json({ message: "Вихід виконано успішно. Видаліть токен на клієнті." });
 });
 
-// ====================== TASK 10: Оновлення профілю ======================
-app.put("/profile", async (req, res) => {
-  const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(401).json({ message: "Немає токена" });
-  }
-
+// ====================== Оновлення профілю ======================
+app.put("/profile", authenticateToken, async (req, res) => {
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    const { email } = decoded;
+    const { email } = req.user;
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
@@ -140,7 +140,7 @@ app.put("/profile", async (req, res) => {
       user: { email: user.email, role: user.role }
     });
   } catch (error) {
-    res.status(401).json({ message: "Невірний токен" });
+    res.status(500).json({ message: "Помилка сервера" });
   }
 });
 

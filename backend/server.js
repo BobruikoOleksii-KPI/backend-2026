@@ -27,13 +27,16 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded;        // attach user data to request for later use
-    next();                    // continue to the route handler
+    req.user = decoded;        // attach user data to request
+    next();
   } catch (error) {
     return res.status(401).json({ message: "Невірний токен" });
   }
 };
 // ====================== END Middleware ======================
+
+// In-memory storage for refresh tokens
+const refreshTokens = {};
 
 // Реєстрація користувача
 app.post("/register", async (req, res) => {
@@ -75,7 +78,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Авторизація (логін)
+// Авторизація (логін): now returns access + refresh token
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -90,19 +93,52 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Невірний пароль" });
     }
 
-    const token = jwt.sign({ 
+    const accessToken = jwt.sign({ 
       email: user.email, 
       role: user.role 
     }, SECRET_KEY, { expiresIn: "1h" });
 
-    res.json({ token });
+    const refreshToken = jwt.sign({ 
+      email: user.email 
+    }, SECRET_KEY, { expiresIn: "7d" });
+
+    // Save refresh token
+    refreshTokens[refreshToken] = user.email;
+
+    res.json({ 
+      accessToken,
+      refreshToken 
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });
 
-// Захищений маршрут (профіль) — тепер використовує middleware
+// Refresh token
+app.post("/refresh", (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken || !refreshTokens[refreshToken]) {
+    return res.status(401).json({ message: "Невірний або прострочений refresh token" });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, SECRET_KEY);
+    const user = { email: decoded.email };
+
+    const newAccessToken = jwt.sign({ 
+      email: user.email 
+    }, SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({ accessToken: newAccessToken });
+  } catch (error) {
+    delete refreshTokens[refreshToken];
+    res.status(401).json({ message: "Невірний refresh token" });
+  }
+});
+
+// Захищений маршрут (профіль)
 app.get("/profile", authenticateToken, (req, res) => {
   res.json({ 
     message: "Доступ дозволено", 
@@ -140,6 +176,46 @@ app.put("/profile", authenticateToken, async (req, res) => {
       user: { email: user.email, role: user.role }
     });
   } catch (error) {
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// ====================== Зміна пароля ======================
+app.put("/change-password", authenticateToken, async (req, res) => {
+  try {
+    const { email } = req.user;
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
+      return res.status(400).json({ message: "Всі поля обов'язкові" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Новий пароль мінімум 6 символів" });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({ message: "Нові паролі не співпадають" });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    // Перевіряємо старий пароль
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Невірний старий пароль" });
+    }
+
+    // Хешуємо і зберігаємо новий пароль
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await user.update({ password: hashedNewPassword });
+
+    res.json({ message: "Пароль успішно змінено" });
+  } catch (error) {
+    console.error("Change password error:", error);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });

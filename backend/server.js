@@ -16,14 +16,12 @@ app.use(express.json());
 // ====================== LAB 3: REGISTRATION & AUTHORIZATION ======================
 
 const SECRET_KEY = "secret123";        // In production → process.env.JWT_SECRET
-let users = [];                        // temporary in-memory storage (Task 11 will move to DB)
 
-// Реєстрація користувача
+// Реєстрація користувача (Task 11 — Sequelize)
 app.post("/register", async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
 
-    // Валідація (Task 3 + Task 7)
     if (!email || !password || !confirmPassword) {
       return res.status(400).json({ message: "Всі поля обов'язкові" });
     }
@@ -36,15 +34,14 @@ app.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Паролі не співпадають" });
     }
 
-    const userExists = users.find((u) => u.email === email);
+    const userExists = await User.findOne({ where: { email } });
     if (userExists) {
       return res.status(400).json({ message: "Користувач вже існує" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Task 8: Додаємо роль (за замовчуванням 'user')
-    users.push({ 
+    await User.create({ 
       email, 
       password: hashedPassword,
       role: "user" 
@@ -52,7 +49,11 @@ app.post("/register", async (req, res) => {
 
     res.status(201).json({ message: "Користувача створено" });
   } catch (error) {
-    res.status(500).json({ message: "Помилка сервера" });
+    console.error("Register error:", error);
+    res.status(500).json({ 
+      message: "Помилка сервера", 
+      error: error.message 
+    });
   }
 });
 
@@ -61,7 +62,7 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = users.find((u) => u.email === email);
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: "Користувача не знайдено" });
     }
@@ -71,14 +72,14 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Невірний пароль" });
     }
 
-    // Task 8: Додаємо роль у токен
     const token = jwt.sign({ 
-      email, 
+      email: user.email, 
       role: user.role 
     }, SECRET_KEY, { expiresIn: "1h" });
 
     res.json({ token });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });
@@ -102,15 +103,13 @@ app.get("/profile", (req, res) => {
   }
 });
 
-// ====================== Logout ======================
+// ====================== TASK 9: Logout ======================
 app.post("/logout", (req, res) => {
-  // JWT є stateless, тому logout відбувається на стороні клієнта (видалення токена).
-  // Сервер просто повертає підтвердження.
   res.json({ message: "Вихід виконано успішно. Видаліть токен на клієнті." });
 });
 
-// ====================== Оновлення профілю ======================
-app.put("/profile", (req, res) => {
+// ====================== TASK 10: Оновлення профілю ======================
+app.put("/profile", async (req, res) => {
   const token = req.headers["authorization"];
 
   if (!token) {
@@ -121,21 +120,19 @@ app.put("/profile", (req, res) => {
     const decoded = jwt.verify(token, SECRET_KEY);
     const { email } = decoded;
 
-    const user = users.find((u) => u.email === email);
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: "Користувача не знайдено" });
     }
 
     const { newEmail } = req.body;
 
-    // Оновлюємо email (якщо передано)
     if (newEmail && newEmail !== email) {
-      // Перевіряємо, чи новий email вже не зайнятий
-      const emailExists = users.find((u) => u.email === newEmail);
+      const emailExists = await User.findOne({ where: { email: newEmail } });
       if (emailExists) {
         return res.status(400).json({ message: "Цей email вже використовується" });
       }
-      user.email = newEmail;
+      await user.update({ email: newEmail });
     }
 
     res.json({ 
@@ -152,7 +149,7 @@ app.put("/profile", (req, res) => {
 const PORT = 3000;
 
 // ====================== DATABASE SYNC ======================
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
     .then(() => console.log('Sequelize tables synced successfully'))
     .catch(err => console.error('Sequelize sync error:', err));
 

@@ -9,12 +9,21 @@ const User = sequelize.define('User', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true          // optional for auth users
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user'
     }
 }, {
     timestamps: true

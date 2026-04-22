@@ -21,15 +21,19 @@ let users = [];                        // temporary in-memory storage (Task 11 w
 // Реєстрація користувача
 app.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
 
-    // Валідація (Task 3)
-    if (!email || !password) {
+    // Валідація (Task 3 + Task 7)
+    if (!email || !password || !confirmPassword) {
       return res.status(400).json({ message: "Всі поля обов'язкові" });
     }
 
     if (password.length < 6) {
       return res.status(400).json({ message: "Пароль мінімум 6 символів" });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Паролі не співпадають" });
     }
 
     const userExists = users.find((u) => u.email === email);
@@ -39,7 +43,12 @@ app.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    users.push({ email, password: hashedPassword });
+    // Task 8: Додаємо роль (за замовчуванням 'user')
+    users.push({ 
+      email, 
+      password: hashedPassword,
+      role: "user" 
+    });
 
     res.status(201).json({ message: "Користувача створено" });
   } catch (error) {
@@ -62,7 +71,11 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Невірний пароль" });
     }
 
-    const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
+    // Task 8: Додаємо роль у токен
+    const token = jwt.sign({ 
+      email, 
+      role: user.role 
+    }, SECRET_KEY, { expiresIn: "1h" });
 
     res.json({ token });
   } catch (error) {
@@ -80,7 +93,10 @@ app.get("/profile", (req, res) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    res.json({ message: "Доступ дозволено", user: decoded });
+    res.json({ 
+      message: "Доступ дозволено", 
+      user: decoded 
+    });
   } catch (error) {
     res.status(401).json({ message: "Невірний токен" });
   }

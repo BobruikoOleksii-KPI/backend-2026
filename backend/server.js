@@ -45,8 +45,8 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(new GoogleStrategy({
-    clientID: 'InsertClientIDHere',
-    clientSecret: 'InsertClientSecretHere',
+    clientID: '',
+    clientSecret: '',
     callbackURL: "http://localhost:3000/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {

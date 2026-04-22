@@ -27,7 +27,7 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded;        // attach user data to request
+    req.user = decoded;
     next();
   } catch (error) {
     return res.status(401).json({ message: "Невірний токен" });
@@ -35,7 +35,12 @@ const authenticateToken = (req, res, next) => {
 };
 // ====================== END Middleware ======================
 
-// In-memory storage for refresh tokens
+// ====================== Login attempts limiter ======================
+const loginAttempts = {};
+const MAX_ATTEMPTS = 5;
+const BLOCK_TIME_MS = 5 * 60 * 1000; // 5 хвилин блокування
+
+// ====================== Refresh tokens storage ======================
 const refreshTokens = {};
 
 // Реєстрація користувача
@@ -71,27 +76,40 @@ app.post("/register", async (req, res) => {
     res.status(201).json({ message: "Користувача створено" });
   } catch (error) {
     console.error("Register error:", error);
-    res.status(500).json({ 
-      message: "Помилка сервера", 
-      error: error.message 
-    });
+    res.status(500).json({ message: "Помилка сервера", error: error.message });
   }
 });
 
-// Авторизація (логін): now returns access + refresh token
+// Авторизація (логін) — з обмеженням спроб 
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Перевірка кількості спроб
+    const attempts = loginAttempts[email] || { count: 0, lastAttempt: 0 };
+    const now = Date.now();
+
+    if (attempts.count >= MAX_ATTEMPTS && (now - attempts.lastAttempt) < BLOCK_TIME_MS) {
+      return res.status(429).json({ 
+        message: `Забагато невдалих спроб. Спробуйте пізніше (${Math.ceil((BLOCK_TIME_MS - (now - attempts.lastAttempt)) / 60000)} хв)` 
+      });
+    }
+
     const user = await User.findOne({ where: { email } });
     if (!user) {
+      // Невдалий attempt
+      loginAttempts[email] = { count: attempts.count + 1, lastAttempt: now };
       return res.status(400).json({ message: "Користувача не знайдено" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      loginAttempts[email] = { count: attempts.count + 1, lastAttempt: now };
       return res.status(400).json({ message: "Невірний пароль" });
     }
+
+    // Успішний логін — скидаємо лічильник
+    delete loginAttempts[email];
 
     const accessToken = jwt.sign({ 
       email: user.email, 
@@ -102,7 +120,6 @@ app.post("/login", async (req, res) => {
       email: user.email 
     }, SECRET_KEY, { expiresIn: "7d" });
 
-    // Save refresh token
     refreshTokens[refreshToken] = user.email;
 
     res.json({ 
@@ -125,12 +142,7 @@ app.post("/refresh", (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, SECRET_KEY);
-    const user = { email: decoded.email };
-
-    const newAccessToken = jwt.sign({ 
-      email: user.email 
-    }, SECRET_KEY, { expiresIn: "1h" });
-
+    const newAccessToken = jwt.sign({ email: decoded.email }, SECRET_KEY, { expiresIn: "1h" });
     res.json({ accessToken: newAccessToken });
   } catch (error) {
     delete refreshTokens[refreshToken];
@@ -140,10 +152,7 @@ app.post("/refresh", (req, res) => {
 
 // Захищений маршрут (профіль)
 app.get("/profile", authenticateToken, (req, res) => {
-  res.json({ 
-    message: "Доступ дозволено", 
-    user: req.user 
-  });
+  res.json({ message: "Доступ дозволено", user: req.user });
 });
 
 // ====================== Logout ======================
@@ -155,26 +164,17 @@ app.post("/logout", (req, res) => {
 app.put("/profile", authenticateToken, async (req, res) => {
   try {
     const { email } = req.user;
-
     const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ message: "Користувача не знайдено" });
-    }
+    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
 
     const { newEmail } = req.body;
-
     if (newEmail && newEmail !== email) {
       const emailExists = await User.findOne({ where: { email: newEmail } });
-      if (emailExists) {
-        return res.status(400).json({ message: "Цей email вже використовується" });
-      }
+      if (emailExists) return res.status(400).json({ message: "Цей email вже використовується" });
       await user.update({ email: newEmail });
     }
 
-    res.json({ 
-      message: "Профіль оновлено успішно",
-      user: { email: user.email, role: user.role }
-    });
+    res.json({ message: "Профіль оновлено успішно", user: { email: user.email, role: user.role } });
   } catch (error) {
     res.status(500).json({ message: "Помилка сервера" });
   }
@@ -189,33 +189,48 @@ app.put("/change-password", authenticateToken, async (req, res) => {
     if (!oldPassword || !newPassword || !confirmNewPassword) {
       return res.status(400).json({ message: "Всі поля обов'язкові" });
     }
-
     if (newPassword.length < 6) {
       return res.status(400).json({ message: "Новий пароль мінімум 6 символів" });
     }
-
     if (newPassword !== confirmNewPassword) {
       return res.status(400).json({ message: "Нові паролі не співпадають" });
     }
 
     const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ message: "Користувача не знайдено" });
-    }
+    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
 
-    // Перевіряємо старий пароль
     const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Невірний старий пароль" });
-    }
+    if (!isMatch) return res.status(400).json({ message: "Невірний старий пароль" });
 
-    // Хешуємо і зберігаємо новий пароль
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     await user.update({ password: hashedNewPassword });
 
     res.json({ message: "Пароль успішно змінено" });
   } catch (error) {
     console.error("Change password error:", error);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// ====================== Видалення користувача ======================
+app.delete("/profile", authenticateToken, async (req, res) => {
+  try {
+    const { email } = req.user;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    await user.destroy();
+    // Очищаємо refresh-токени цього користувача
+    Object.keys(refreshTokens).forEach(key => {
+      if (refreshTokens[key] === email) delete refreshTokens[key];
+    });
+
+    res.json({ message: "Користувача успішно видалено" });
+  } catch (error) {
+    console.error("Delete user error:", error);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });

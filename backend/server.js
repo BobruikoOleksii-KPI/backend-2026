@@ -15,16 +15,12 @@ app.use(express.json());
 
 // ====================== LAB 3: REGISTRATION & AUTHORIZATION ======================
 
-const SECRET_KEY = "secret123";        // In production → process.env.JWT_SECRET
+const SECRET_KEY = "secret123";
 
 // ====================== Auth Middleware ======================
 const authenticateToken = (req, res, next) => {
   const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(401).json({ message: "Немає токена" });
-  }
-
+  if (!token) return res.status(401).json({ message: "Немає токена" });
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     req.user = decoded;
@@ -33,21 +29,66 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ message: "Невірний токен" });
   }
 };
-// ====================== END Middleware ======================
 
 // ====================== Login attempts limiter ======================
 const loginAttempts = {};
 const MAX_ATTEMPTS = 5;
 const BLOCK_TIME_MS = 5 * 60 * 1000;
 
-// ====================== Refresh tokens storage ======================
+// ====================== Token storages ======================
 const refreshTokens = {};
-
-// ====================== Reset tokens storage ======================
 const resetTokens = {};
-
-// ====================== Email verification storage ======================
 const verificationTokens = {};
+
+// ====================== Google OAuth ======================
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+passport.use(new GoogleStrategy({
+    clientID: '506490845437-ke7lsjepd9ct92gte4u3i82u938u8nmr.apps.googleusercontent.com',
+    clientSecret: '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',
+    callbackURL: "http://localhost:3000/auth/google/callback"
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      let user = await User.findOne({ where: { email: profile.emails[0].value } });
+      if (!user) {
+        user = await User.create({
+          email: profile.emails[0].value,
+          password: await bcrypt.hash(Math.random().toString(36), 10), // random password
+          role: "user",
+          isVerified: true,
+          name: profile.displayName
+        });
+      }
+      return done(null, user);
+    } catch (err) {
+      return done(err, null);
+    }
+  }
+));
+
+// Google login route
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// Google callback
+app.get('/auth/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: '/' }),
+  (req, res) => {
+    const token = jwt.sign({ 
+      email: req.user.email, 
+      role: req.user.role 
+    }, SECRET_KEY, { expiresIn: "1h" });
+
+    res.json({ 
+      message: "Успішний вхід через Google",
+      token,
+      user: req.user
+    });
+  }
+);
 
 // Реєстрація користувача + email verification
 app.post("/register", async (req, res) => {

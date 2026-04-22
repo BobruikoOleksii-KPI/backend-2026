@@ -102,6 +102,51 @@ app.get("/profile", (req, res) => {
   }
 });
 
+// ====================== Logout ======================
+app.post("/logout", (req, res) => {
+  // JWT є stateless, тому logout відбувається на стороні клієнта (видалення токена).
+  // Сервер просто повертає підтвердження.
+  res.json({ message: "Вихід виконано успішно. Видаліть токен на клієнті." });
+});
+
+// ====================== Оновлення профілю ======================
+app.put("/profile", (req, res) => {
+  const token = req.headers["authorization"];
+
+  if (!token) {
+    return res.status(401).json({ message: "Немає токена" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const { email } = decoded;
+
+    const user = users.find((u) => u.email === email);
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    const { newEmail } = req.body;
+
+    // Оновлюємо email (якщо передано)
+    if (newEmail && newEmail !== email) {
+      // Перевіряємо, чи новий email вже не зайнятий
+      const emailExists = users.find((u) => u.email === newEmail);
+      if (emailExists) {
+        return res.status(400).json({ message: "Цей email вже використовується" });
+      }
+      user.email = newEmail;
+    }
+
+    res.json({ 
+      message: "Профіль оновлено успішно",
+      user: { email: user.email, role: user.role }
+    });
+  } catch (error) {
+    res.status(401).json({ message: "Невірний токен" });
+  }
+});
+
 // ====================== END LAB 3 AUTH ======================
 
 const PORT = 3000;

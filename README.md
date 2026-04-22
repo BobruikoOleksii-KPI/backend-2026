@@ -15,16 +15,29 @@
 `cd frontend`
 `npx serve`
 
-### 2. Backend (Lab 2)
+### 2. Backend (Lab 2 + Lab 3)
+
 - `cd backend`
 - `npm install`
-- У MySQL Workbench вручну створити пусту базу даних:
--    `CREATE DATABASE web_backend_lab` 
--    `CHARACTER SET utf8mb4` 
--    `COLLATE utf8mb4_unicode_ci`;
-- `node server.js`
 
+**Запуск MySQL сервера:**
+1. Відкрийте **PowerShell** (або Command Prompt).
+2. Перейдіть у папку MySQL:
+`cd "C:\Program Files\MySQL\MySQL Server 8.0\bin"`
+3. Запустіть сервер (залиште це вікно відкритим):
+`.\mysqld --console` (Ви побачите [Server] ready for connections)
+4. Створіть базу даних (відкрийте ще один термінал):
+`.\mysql -u root -p` (натисність Enter, або введіть пароль якщо він є)
+Після промпту `mysql>` введіть:
+`CREATE DATABASE web_backend_lab CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+Після цього введіть `EXIT;` і закрийте вікно.
+
+Запуск Node.js сервера:
+У новому терміналі:
+`cd C:\Users\...\backend2026\backend`
+`node server.js`
 Сервер буде доступний за адресою: http://localhost:3000
+Примітка: Користувач root має порожній пароль (створено через --initialize-insecure).
 
 ### Технології
 - Frontend: HTML5, CSS3 (Flexbox + Grid), JavaScript

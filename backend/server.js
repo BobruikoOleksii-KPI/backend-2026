@@ -38,7 +38,7 @@ const authenticateToken = (req, res, next) => {
 // ====================== Login attempts limiter ======================
 const loginAttempts = {};
 const MAX_ATTEMPTS = 5;
-const BLOCK_TIME_MS = 5 * 60 * 1000; // 5 хвилин блокування
+const BLOCK_TIME_MS = 5 * 60 * 1000;
 
 // ====================== Refresh tokens storage ======================
 const refreshTokens = {};
@@ -46,7 +46,10 @@ const refreshTokens = {};
 // ====================== Reset tokens storage ======================
 const resetTokens = {};
 
-// Реєстрація користувача
+// ====================== Email verification storage ======================
+const verificationTokens = {};
+
+// Реєстрація користувача + email verification
 app.post("/register", async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body;
@@ -70,16 +73,51 @@ app.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({ 
+    const user = await User.create({ 
       email, 
       password: hashedPassword,
-      role: "user" 
+      role: "user",
+      isVerified: false
     });
 
-    res.status(201).json({ message: "Користувача створено" });
+    // Генеруємо токен для підтвердження email
+    const verificationToken = jwt.sign({ email }, SECRET_KEY, { expiresIn: "24h" });
+    verificationTokens[verificationToken] = email;
+
+    console.log(`[EMAIL VERIFICATION] Token for ${email}: ${verificationToken}`);
+
+    res.status(201).json({ 
+      message: "Користувача створено. Перевірте email для підтвердження (токен виведено в консоль сервера)",
+      verificationToken   // для тестування в лабораторній
+    });
   } catch (error) {
     console.error("Register error:", error);
     res.status(500).json({ message: "Помилка сервера", error: error.message });
+  }
+});
+
+// ====================== Verify email ======================
+app.get("/verify-email", async (req, res) => {
+  const { token } = req.query;
+
+  if (!token || !verificationTokens[token]) {
+    return res.status(400).json({ message: "Невірний або прострочений токен підтвердження" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const email = decoded.email;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
+
+    await user.update({ isVerified: true });
+    delete verificationTokens[token];
+
+    res.json({ message: "Email успішно підтверджено" });
+  } catch (error) {
+    console.error("Verify email error:", error);
+    res.status(400).json({ message: "Невірний токен" });
   }
 });
 

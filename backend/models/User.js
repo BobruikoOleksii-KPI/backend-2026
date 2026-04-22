@@ -9,7 +9,7 @@ const User = sequelize.define('User', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: true          // optional for auth users
+        allowNull: true
     },
     email: {
         type: DataTypes.STRING,
@@ -24,7 +24,14 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'user'
+    },
+    // ====================== Email verification ======================
+    isVerified: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
+    // =========================================================================
 }, {
     timestamps: true
 });

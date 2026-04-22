@@ -43,6 +43,9 @@ const BLOCK_TIME_MS = 5 * 60 * 1000; // 5 хвилин блокування
 // ====================== Refresh tokens storage ======================
 const refreshTokens = {};
 
+// ====================== Reset tokens storage ======================
+const resetTokens = {};
+
 // Реєстрація користувача
 app.post("/register", async (req, res) => {
   try {
@@ -80,12 +83,11 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Авторизація (логін) — з обмеженням спроб 
+// Авторизація (логін) — з обмеженням спроб
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Перевірка кількості спроб
     const attempts = loginAttempts[email] || { count: 0, lastAttempt: 0 };
     const now = Date.now();
 
@@ -97,7 +99,6 @@ app.post("/login", async (req, res) => {
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      // Невдалий attempt
       loginAttempts[email] = { count: attempts.count + 1, lastAttempt: now };
       return res.status(400).json({ message: "Користувача не знайдено" });
     }
@@ -108,24 +109,14 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Невірний пароль" });
     }
 
-    // Успішний логін — скидаємо лічильник
     delete loginAttempts[email];
 
-    const accessToken = jwt.sign({ 
-      email: user.email, 
-      role: user.role 
-    }, SECRET_KEY, { expiresIn: "1h" });
-
-    const refreshToken = jwt.sign({ 
-      email: user.email 
-    }, SECRET_KEY, { expiresIn: "7d" });
+    const accessToken = jwt.sign({ email: user.email, role: user.role }, SECRET_KEY, { expiresIn: "1h" });
+    const refreshToken = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: "7d" });
 
     refreshTokens[refreshToken] = user.email;
 
-    res.json({ 
-      accessToken,
-      refreshToken 
-    });
+    res.json({ accessToken, refreshToken });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Помилка сервера" });
@@ -145,6 +136,7 @@ app.post("/refresh", (req, res) => {
     const newAccessToken = jwt.sign({ email: decoded.email }, SECRET_KEY, { expiresIn: "1h" });
     res.json({ accessToken: newAccessToken });
   } catch (error) {
+    console.error("Refresh token error:", error);
     delete refreshTokens[refreshToken];
     res.status(401).json({ message: "Невірний refresh token" });
   }
@@ -176,6 +168,7 @@ app.put("/profile", authenticateToken, async (req, res) => {
 
     res.json({ message: "Профіль оновлено успішно", user: { email: user.email, role: user.role } });
   } catch (error) {
+    console.error("Profile update error:", error);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });
@@ -223,7 +216,6 @@ app.delete("/profile", authenticateToken, async (req, res) => {
     }
 
     await user.destroy();
-    // Очищаємо refresh-токени цього користувача
     Object.keys(refreshTokens).forEach(key => {
       if (refreshTokens[key] === email) delete refreshTokens[key];
     });
@@ -231,6 +223,73 @@ app.delete("/profile", authenticateToken, async (req, res) => {
     res.json({ message: "Користувача успішно видалено" });
   } catch (error) {
     console.error("Delete user error:", error);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// ====================== Відновлення пароля ======================
+// Forgot password (генеруємо reset-токен)
+app.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email обов'язковий" });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    // Генеруємо простий reset-токен (для лабораторної роботи)
+    const resetToken = jwt.sign({ email }, SECRET_KEY, { expiresIn: "15m" });
+    resetTokens[resetToken] = email;
+
+    console.log(`[PASSWORD RESET] Token for ${email}: ${resetToken}`); // debugging
+
+    res.json({ 
+      message: "Reset token згенеровано (для тестування)",
+      resetToken 
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+// Reset password
+app.put("/reset-password", async (req, res) => {
+  try {
+    const { resetToken, newPassword, confirmNewPassword } = req.body;
+
+    if (!resetToken || !newPassword || !confirmNewPassword) {
+      return res.status(400).json({ message: "Всі поля обов'язкові" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Новий пароль мінімум 6 символів" });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({ message: "Нові паролі не співпадають" });
+    }
+
+    if (!resetTokens[resetToken]) {
+      return res.status(401).json({ message: "Невірний або прострочений reset token" });
+    }
+
+    const decoded = jwt.verify(resetToken, SECRET_KEY);
+    const email = decoded.email;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: "Користувача не знайдено" });
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await user.update({ password: hashedNewPassword });
+
+    delete resetTokens[resetToken]; // cleanup
+
+    res.json({ message: "Пароль успішно замінено" });
+  } catch (error) {
+    console.error("Reset password error:", error);
     res.status(500).json({ message: "Помилка сервера" });
   }
 });

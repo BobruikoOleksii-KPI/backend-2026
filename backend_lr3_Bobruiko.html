@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №3 – FilmHub Backend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            padding: 2rem 0;
+            border-bottom: 1px solid #222;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin-bottom: 12px;
+        }
+        .sidebar ul a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar ul a:hover {
+            color: var(--accent);
+        }
+        .main-content {
+            flex: 1;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .title-page {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        h2 { font-size: 1.8rem; margin: 50px 0 25px; color: white; }
+        h3 { font-size: 1.3rem; margin: 35px 0 15px; color: var(--accent); }
+        p { margin-bottom: 18px; }
+        pre {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ</h1>
+        <p style="margin-top:10px; color:#888;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+    </div>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h3>Зміст</h3>
+            <ul>
+                <li><a href="#intro">Вибір предметної області</a></li>
+                <li><a href="#relevance">Актуальність теми</a></li>
+                <li><a href="#goal">Мета роботи</a></li>
+                <li><a href="#tasks">Завдання роботи</a></li>
+                <li><a href="#object">Об’єкт роботи</a></li>
+                <li><a href="#subject">Предмет роботи</a></li>
+                <li><a href="#business">Бізнес-логіка</a></li>
+                <li><a href="#func">Функціональні вимоги</a></li>
+                <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
+                <li><a href="#screenshots">Скріншоти</a></li>
+                <li><a href="#conclusion">Висновок</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+
+            <div class="title-page" style="display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+                <div style="flex: 1;">
+                    <div class="university">
+                        Міністерство освіти і науки України<br>
+                        Національний технічний університет України<br>
+                        «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+                        Факультет інформатики та обчислювальної техніки<br>
+                        Кафедра обчислювальної техніки
+                    </div>
+
+                    <div class="lab-number">
+                        ЛАБОРАТОРНА РОБОТА № 3
+                    </div>
+        
+                    <div class="discipline">
+                        з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+                        на тему «Розробка функціонального rest api. Реєстрація та авторизація користувачів. Валідація даних і обробка помилок.»
+                    </div>
+
+                    <div class="performer">
+                        <strong>ВИКОНАВ:</strong><br><br>
+                        студент ІІІ курсу ФІОТ<br>
+                        групи <strong>ІО-31</strong><br>
+                        <strong>Бобруйко Олексій</strong>
+                    </div>
+
+                    <div class="reviewer">
+                        <strong>ПЕРЕВІРИВ:</strong><br><br>
+                        <strong>Проскура С.Л.</strong>
+                    </div>
+
+                    <div class="city-year">
+                        Київ – 2026
+                    </div>
+               </div>
+
+                <img src="backend/screenshots/studentphoto.PNG" 
+                     alt="Фото студента" 
+                     style="width: 180px; height: 240px; object-fit: cover; border-radius: 12px; border: 3px solid #222; box-shadow: 0 10px 20px rgba(0,0,0,0.6);">
+            </div>
+
+            <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
+
+            <h3 id="relevance">Актуальність теми</h3>
+            <p>У сучасних веб-застосунках, таких як FilmHub, одним з найважливіших аспектів є безпека та захист користувацьких даних. Реалізація повноцінного функціонального REST API з механізмами реєстрації, авторизації, валідації вхідних даних, обробки помилок, обмеженням спроб входу, відновленням пароля та підтримкою OAuth є необхідною умовою для створення надійного та захищеного серверного додатку.</p>
+
+            <h3 id="goal">Мета роботи</h3>
+            <p>Метою лабораторної роботи було вивчення принципів побудови REST API, набуття практичних навичок розробки серверної частини веб-застосунку з використанням Node.js та Express.js, реалізація повноцінної системи реєстрації та авторизації користувачів з використанням JWT-токенів, валідації даних, обробки помилок, а також впровадження додаткових механізмів безпеки (обмеження спроб входу, відновлення пароля, підтвердження email та OAuth).</p>
+
+            <h3 id="tasks">Завдання роботи</h3>
+            <ol>
+                <li>Встановити необхідні бібліотеки.</li>
+                <li>Реалізувати реєстрацію та авторизацію користувача.</li>
+                <li>Додати валідацію даних та обробку помилок.</li>
+                <li>Реалізувати захищений маршрут.</li>
+                <li>Протестувати API через Postman.</li>
+                <li>Проаналізувати отримані результати.</li>
+                <li>Додати підтвердження пароля при реєстрації.</li>
+                <li>Додати роль користувача (admin/user).</li>
+                <li>Реалізувати logout.</li>
+                <li>Додати оновлення профілю.</li>
+                <li>Зберігати користувачів у базі даних (Sequelize).</li>
+                <li>Реалізувати refresh token.</li>
+                <li>Додати логування помилок.</li>
+                <li>Обмежити кількість спроб входу.</li>
+                <li>Додати middleware для перевірки токена.</li>
+                <li>Реалізувати зміну пароля.</li>
+                <li>Реалізувати видалення користувача.</li>
+                <li>Реалізувати відновлення пароля.</li>
+                <li>Додати підтвердження email.</li>
+                <li>Реалізувати OAuth (Google login).</li>
+            </ol>
+
+            <h3 id="object">Об’єкт роботи</h3>
+            <p>Процес розробки серверної частини веб-застосунку FilmHub з використанням сучасних інструментів backend-розробки для створення повноцінного функціонального REST API.</p>
+
+            <h3 id="subject">Предмет роботи</h3>
+            <p>Принципи побудови REST API, реалізація механізмів реєстрації та авторизації користувачів, валідація вхідних даних, обробка помилок, робота з JWT-токенами, обмеження кількості спроб входу, відновлення пароля, підтвердження електронної пошти та інтеграція OAuth (Google login) на базі Node.js та Express.js.</p>
+
+            <h3 id="business">Бізнес-логіка роботи</h3>
+            <p>Бізнес-логіка системи FilmHub полягає у забезпеченні безпечної та зручної роботи з обліковими записами користувачів. Кожен користувач може зареєструватися, підтвердити свою електронну пошту, виконати вхід у систему (в тому числі через Google-акаунт), оновити профіль, змінити пароль, відновити доступ у разі його втрати, а також видалити свій акаунт. Система забезпечує високий рівень захисту даних, обмеження спроб авторизації та підтримує stateless-автентифікацію за допомогою JWT-токенів.</p>
+
+            <h3 id="func">Функціональні вимоги</h3>
+            <ol>
+                <li>Реєстрація користувача з підтвердженням пароля та автоматичним створенням неактивного (непідтвердженого) акаунта.</li>
+                <li>Авторизація (логін) з обмеженням кількості спроб входу та блокуванням акаунта на 5 хвилин.</li>
+                <li>Видача access-токена (1 година) та refresh-токена (7 днів) при успішному вході.</li>
+                <li>Оновлення access-токена за допомогою refresh-токена.</li>
+                <li>Захищені маршрути з використанням middleware для перевірки JWT-токена.</li>
+                <li>Перегляд, оновлення та видалення профілю користувача.</li>
+                <li>Зміна пароля з перевіркою старого пароля.</li>
+                <li>Відновлення пароля через механізм forgot-password + reset-password.</li>
+                <li>Підтвердження електронної пошти за допомогою токена.</li>
+                <li>Авторизація через Google OAuth 2.0.</li>
+            </ol>
+
+            <h3 id="nonfunc">Нефункціональні вимоги</h3>
+            <ol>
+                <li>Використання асинхронного підходу (async/await) для всіх операцій з базою даних.</li>
+                <li>Централізована обробка помилок та детальне логування в консоль.</li>
+                <li>Захист від brute-force атак шляхом обмеження спроб входу.</li>
+                <li>Безпечне зберігання паролів за допомогою хешування (bcryptjs).</li>
+                <li>Stateless-автентифікація за допомогою JWT-токенів.</li>
+                <li>Чітке розділення коду: middleware, маршрути, моделі та конфігурація.</li>
+                <li>Кросплатформенність та можливість легкого розгортання на іншому комп’ютері.</li>
+                <li>Забезпечення безпеки чутливих даних (не комітити Client ID / Client Secret у Git).</li>
+            </ol>
+
+            <h3 id="github-link">Посилання на репозиторій GitHub</h3>
+            <p>
+                <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
+                target="_blank" 
+                style="color:#0066cc; text-decoration:underline; font-weight:bold;">
+                https://github.com/BobruikoOleksii-KPI/backend-2026
+                </a>
+            </p>
+
+            <h3 id="screenshots">Скріншоти роботи</h3>
+
+            <p><strong>Рис. 1.</strong> Реєстрація користувача з підтвердженням пароля та генерацією токена для верифікації email</p>
+            <p>На скріншоті продемонстровано успішну реєстрацію користувача через ендпоінт <code>/register</code>. Система повертає повідомлення про створення акаунта та токен для підтвердження email (для тестування).</p>
+            <img src="backend/screenshots/lr3-ssh1.PNG">
+
+            <p><strong>Рис. 2.</strong> Підтвердження електронної пошти через токен</p>
+            <p>Демонстрація роботи ендпоінту <code>/verify-email</code>. Після переходу за посиланням з токеном статус користувача змінюється на підтверджений (<code>isVerified: true</code>).</p>
+            <img src="backend/screenshots/lr3-ssh2.PNG">
+
+            <p><strong>Рис. 3.</strong> Авторизація користувача з отриманням accessToken та refreshToken</p>
+            <p>Успішний логін через ендпоінт <code>/login</code>. Система повертає пару токенів: короткостроковий access-токен та довгостроковий refresh-токен.</p>
+            <img src="backend/screenshots/lr3-ssh3.PNG">
+
+            <p><strong>Рис. 4.</strong> Оновлення access-токена за допомогою refresh-токена</p>
+            <p>Демонстрація роботи ендпоінту <code>/refresh</code>. Користувач отримує новий access-токен без повторного введення логіну та пароля.</p>
+            <img src="backend/screenshots/lr3-ssh4.PNG">
+
+            <p><strong>Рис. 5.</strong> Робота захищених маршрутів (перегляд та оновлення профілю)</p>
+            <p>Демонстрація роботи middleware <code>authenticateToken</code>. Запити до <code>/profile</code> (GET та PUT) успішно обробляються лише за наявності валідного JWT-токена.</p>
+            <img src="backend/screenshots/lr3-ssh5-1.PNG">
+            <img src="backend/screenshots/lr3-ssh5-2.PNG">
+
+            <p><strong>Рис. 6.</strong> Зміна пароля користувача</p>
+            <p>Успішна зміна пароля через захищений ендпоінт <code>/change-password</code>. Система перевіряє старий пароль перед оновленням.</p>
+            <img src="backend/screenshots/lr3-ssh6.PNG">
+
+            <p><strong>Рис. 7.</strong> Відновлення пароля через механізм forgot-password + reset-password</p>
+            <p>Повний цикл відновлення пароля. Користувач отримує reset-токен, після чого успішно змінює пароль за допомогою ендпоінту <code>/reset-password</code>.</p>
+            <img src="backend/screenshots/lr3-ssh7-1.PNG">
+            <img src="backend/screenshots/lr3-ssh7-2.PNG">
+
+            <p><strong>Рис. 8.</strong> Обмеження кількості спроб входу (login rate limiting)</p>
+            <p>Демонстрація захисту від brute-force атак. Після 5 невдалих спроб логін блокується на 5 хвилин (статус 429).</p>
+            <img src="backend/screenshots/lr3-ssh8.PNG">
+
+            <p><strong>Рис. 9.</strong> Авторизація через Google OAuth 2.0</p>
+            <p>Успішний вхід у систему за допомогою Google-акаунта. Користувач автоматично створюється в базі даних з підтвердженою поштою (<code>isVerified: true</code>).</p>
+            <img src="backend/screenshots/lr3-ssh9.PNG">
+
+            <h3 id="conclusion">Висновок</h3>
+            <p>В ході виконання лабораторної роботи №3 було успішно реалізовано повноцінний функціональний REST API для веб-застосунку FilmHub. Було розроблено систему реєстрації та авторизації користувачів з використанням JWT-токенів, додано підтвердження пароля, роль користувача, обмеження спроб входу, refresh-токени, захищені маршрути через middleware, зміну та відновлення пароля, підтвердження електронної пошти та інтеграцію з Google OAuth 2.0.</p>
+            <p>Всі 20 завдань лабораторної роботи виконано. Дані користувачів зберігаються в базі даних MySQL за допомогою ORM Sequelize. Реалізовано належну валідацію, обробку помилок та логування. Отриманий досвід дозволяє створювати сучасні, безпечні та масштабовані backend-рішення. Розроблений сервер може бути легко інтегрований з фронтендом у наступних лабораторних роботах.</p>
+
+        </div>
+    </div>
+
+</body>
+</html>

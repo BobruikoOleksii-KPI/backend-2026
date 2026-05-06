@@ -26,8 +26,29 @@ const logger = winston.createLogger({
 
 logger.info('Lab 4 server started successfully');
 
-// ====================== Multer file upload ======================
-// Кастомне налаштування збереження
+// ====================== Валідація файлів ======================
+const fileFilter = (req, file, cb) => {
+  // Allowed extensions
+  const allowedExt = /\.(jpeg|jpg|png|pdf|txt)$/i;
+  const extName = allowedExt.test(path.extname(file.originalname));
+
+  // Allowed MIME types
+  const allowedMimeTypes = [
+    'image/jpeg',
+    'image/png',
+    'application/pdf',
+    'text/plain'
+  ];
+
+  const mimeType = allowedMimeTypes.includes(file.mimetype);
+
+  if (extName && mimeType) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Дозволені тільки файли: jpg, jpeg, png, pdf, txt'), false);
+  }
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -39,7 +60,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  fileFilter: fileFilter
 });
 
 // Завантаження ОДНОГО файлу
@@ -73,7 +95,7 @@ app.post('/upload-multiple', upload.array('files', 5), (req, res) => {
 // ====================== Error handling ======================
 app.use((err, req, res, next) => {
   logger.error(`Error: ${err.message} | Path: ${req.path}`);
-  res.status(500).json({ success: false, message: 'Внутрішня помилка сервера' });
+  res.status(500).json({ success: false, message: err.message || 'Внутрішня помилка сервера' });
 });
 
 app.get('/', (req, res) => {

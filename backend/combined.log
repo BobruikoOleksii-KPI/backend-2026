@@ -16,3 +16,23 @@
 {"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 16:17:08"}
 {"level":"info","message":"File uploaded: 1778073431015-testfile.txt","timestamp":"2026-05-06 16:17:11"}
 {"level":"info","message":"Uploaded 3 files","timestamp":"2026-05-06 16:17:26"}
+{"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 16:31:00"}
+{"level":"info","message":"GET / - 4ms","timestamp":"2026-05-06 16:31:29"}
+{"level":"info","message":"Status checked - Uptime: 30.85s","timestamp":"2026-05-06 16:31:30"}
+{"level":"info","message":"GET /favicon.ico - 2ms","timestamp":"2026-05-06 16:31:30"}
+{"level":"info","message":"Status checked - Uptime: 32.96s","timestamp":"2026-05-06 16:31:32"}
+{"level":"info","message":"GET /favicon.ico - 1ms","timestamp":"2026-05-06 16:31:32"}
+{"level":"info","message":"Status checked - Uptime: 33.29s","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"GET /favicon.ico - 1ms","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"Status checked - Uptime: 33.47s","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"GET /favicon.ico - 1ms","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"Status checked - Uptime: 33.62s","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"GET /favicon.ico - 1ms","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"Status checked - Uptime: 33.77s","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"GET /favicon.ico - 0ms","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"Status checked - Uptime: 33.93s","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"GET /favicon.ico - 1ms","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"Status checked - Uptime: 34.10s","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"GET /favicon.ico - 0ms","timestamp":"2026-05-06 16:31:33"}
+{"level":"info","message":"File uploaded: 1778074302314-testfile.txt","timestamp":"2026-05-06 16:31:42"}
+{"level":"info","message":"Uploaded 3 files","timestamp":"2026-05-06 16:31:55"}

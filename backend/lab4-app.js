@@ -92,6 +92,37 @@ app.post('/upload-multiple', upload.array('files', 5), (req, res) => {
   });
 });
 
+// ====================== Моніторинг стану сервера ======================
+app.get('/status', (req, res) => {
+  const memoryUsage = process.memoryUsage();
+  const uptime = process.uptime();
+
+  logger.info(`Status checked - Uptime: ${uptime.toFixed(2)}s`);
+
+  res.json({
+    success: true,
+    uptime: `${uptime.toFixed(2)} seconds`,
+    memoryUsage: {
+      rss: memoryUsage.rss,
+      heapTotal: memoryUsage.heapTotal,
+      heapUsed: memoryUsage.heapUsed,
+      external: memoryUsage.external
+    }
+  });
+});
+
+// ====================== Вимірювання часу відповіді ======================
+app.use((req, res, next) => {
+  const start = Date.now();
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    logger.info(`${req.method} ${req.url} - ${duration}ms`);
+  });
+
+  next();
+});
+
 // ====================== Error handling ======================
 app.use((err, req, res, next) => {
   logger.error(`Error: ${err.message} | Path: ${req.path}`);
@@ -99,7 +130,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('Lab 4 server is running on port 4000<br>Try /upload and /upload-multiple');
+  res.send('Lab 4 server is running on port 4000<br>Try /upload, /upload-multiple and /status');
 });
 
 app.get('/error', (req, res, next) => {

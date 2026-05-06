@@ -38,3 +38,15 @@
 {"level":"info","message":"Uploaded 3 files","timestamp":"2026-05-06 16:31:55"}
 {"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 16:50:04"}
 {"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 16:50:45"}
+{"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 17:13:35"}
+{"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 17:14:01"}
+{"level":"info","message":"GET / - 4ms","timestamp":"2026-05-06 17:14:10"}
+{"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-06 17:15:02"}
+{"level":"info","message":"GET / - 1ms","timestamp":"2026-05-06 17:15:05"}
+{"level":"info","message":"File uploaded: 1778076914138-testfile.txt","timestamp":"2026-05-06 17:15:14"}
+{"level":"info","message":"GET / - 1ms","timestamp":"2026-05-06 17:15:33"}
+{"level":"info","message":"GET / - 1ms","timestamp":"2026-05-06 17:16:17"}
+{"level":"info","message":"GET /error - 2ms","timestamp":"2026-05-06 17:18:24"}
+{"level":"info","message":"File uploaded: 1778077207774-testfile.txt","timestamp":"2026-05-06 17:20:07"}
+{"level":"info","message":"Uploaded 3 files","timestamp":"2026-05-06 17:20:40"}
+{"level":"error","message":"Error: Дозволені тільки файли: jpg, jpeg, png, pdf, txt | Path: /upload","timestamp":"2026-05-06 17:21:25"}

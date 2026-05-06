@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №4 – FilmHub Backend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            padding: 2rem 0;
+            border-bottom: 1px solid #222;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin-bottom: 12px;
+        }
+        .sidebar ul a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar ul a:hover {
+            color: var(--accent);
+        }
+        .main-content {
+            flex: 1;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .title-page {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        h2 { font-size: 1.8rem; margin: 50px 0 25px; color: white; }
+        h3 { font-size: 1.3rem; margin: 35px 0 15px; color: var(--accent); }
+        p { margin-bottom: 18px; }
+        pre {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ</h1>
+        <p style="margin-top:10px; color:#888;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+    </div>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h3>Зміст</h3>
+            <ul>
+                <li><a href="#intro">Вибір предметної області</a></li>
+                <li><a href="#relevance">Актуальність теми</a></li>
+                <li><a href="#goal">Мета роботи</a></li>
+                <li><a href="#tasks">Завдання роботи</a></li>
+                <li><a href="#object">Об’єкт роботи</a></li>
+                <li><a href="#subject">Предмет роботи</a></li>
+                <li><a href="#business">Бізнес-логіка</a></li>
+                <li><a href="#func">Функціональні вимоги</a></li>
+                <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
+                <li><a href="#screenshots">Скріншоти</a></li>
+                <li><a href="#conclusion">Висновок</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+
+            <div class="title-page" style="display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+                <div style="flex: 1;">
+                    <div class="university">
+                        Міністерство освіти і науки України<br>
+                        Національний технічний університет України<br>
+                        «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+                        Факультет інформатики та обчислювальної техніки<br>
+                        Кафедра обчислювальної техніки
+                    </div>
+
+                    <div class="lab-number">
+                        ЛАБОРАТОРНА РОБОТА № 4
+                    </div>
+        
+                    <div class="discipline">
+                        з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+                        на тему «Розширені можливості Node.js-додатків: логування, завантаження файлів, моніторинг продуктивності.»
+                    </div>
+
+                    <div class="performer">
+                        <strong>ВИКОНАВ:</strong><br><br>
+                        студент ІІІ курсу ФІОТ<br>
+                        групи <strong>ІО-31</strong><br>
+                        <strong>Бобруйко Олексій</strong>
+                    </div>
+
+                    <div class="reviewer">
+                        <strong>ПЕРЕВІРИВ:</strong><br><br>
+                        <strong>Проскура С.Л.</strong>
+                    </div>
+
+                    <div class="city-year">
+                        Київ – 2026
+                    </div>
+               </div>
+
+                <img src="backend/screenshots/studentphoto.PNG" 
+                     alt="Фото студента" 
+                     style="width: 180px; height: 240px; object-fit: cover; border-radius: 12px; border: 3px solid #222; box-shadow: 0 10px 20px rgba(0,0,0,0.6);">
+            </div>
+
+            <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
+
+            <h3 id="relevance">Актуальність теми</h3>
+            <p>У сучасній розробці серверних застосунків на базі Node.js одним з ключових аспектів є не тільки функціональність, але й надійність, безпека та контроль роботи програми в реальному часі. Логування подій, завантаження файлів та моніторинг продуктивності є обов’язковими компонентами професійного backend-додатку. Вони дозволяють розробникам швидко знаходити помилки, аналізувати поведінку користувачів, забезпечувати безпеку завантажених файлів та вчасно виявляти проблеми з продуктивністю.</p>
+
+            <h3 id="goal">Мета роботи</h3>
+            <p>Метою лабораторної роботи було ознайомлення з розширеними можливостями Node.js та Express.js, а саме: реалізацією ефективного логування HTTP-запитів і системних подій, організацією безпечного завантаження файлів на сервер за допомогою Multer, а також впровадженням інструментів моніторингу продуктивності застосунку (uptime, використання пам’яті та CPU).</p>
+
+            <h3 id="tasks">Завдання роботи</h3>
+            <ol>
+                <li>Ініціалізувати проєкт та створити базовий Express-сервер.</li>
+                <li>Підключити Morgan та налаштувати логування всіх HTTP-запитів.</li>
+                <li>Інтегрувати Winston для файлового логування подій з рівнями info та error.</li>
+                <li>Реалізувати middleware для обробки помилок з логуванням через Winston.</li>
+                <li>Реалізувати ендпоінт для завантаження одного файлу за допомогою Multer.</li>
+                <li>Реалізувати ендпоінт для завантаження кількох файлів.</li>
+                <li>Додати валідацію файлів (дозволені типи та обмеження розміру).</li>
+                <li>Створити ендпоінт /status для моніторингу стану сервера.</li>
+                <li>Реалізувати middleware для вимірювання часу обробки кожного запиту.</li>
+                <li>Інтегрувати менеджер процесів PM2 для запуску та моніторингу застосунку.</li>
+            </ol>
+
+            <h3 id="object">Об’єкт роботи</h3>
+            <p>Процес розробки серверного застосунку на базі Node.js та Express.js з розширеними можливостями: реалізація логування запитів і подій, організація завантаження файлів на сервер та моніторинг продуктивності в реальному часі.</p>
+
+            <h3 id="subject">Предмет роботи</h3>
+            <p>Інструменти та технології для розширення функціональності Node.js-додатків: Morgan та Winston для логування, Multer для обробки та збереження файлів, вбудований модуль process та PM2 для моніторингу продуктивності (uptime, використання пам’яті та CPU).</p>
+
+            <h3 id="business">Бізнес-логіка роботи</h3>
+            <p>Бізнес-логіка лабораторної роботи полягає в забезпеченні стабільності, безпеки та контролю роботи серверного застосунку. Логування дозволяє швидко виявляти помилки та підозрілу активність, механізм завантаження файлів дає можливість користувачам передавати контент на сервер, а моніторинг продуктивності допомагає вчасно виявляти вузькі місця, запобігати збоям і оптимізувати ресурси сервера в реальному проєкті.</p>
+
+            <h3 id="func">Функціональні вимоги</h3>
+            <ol>
+                <li>Створити базовий Express-сервер, що відповідає на GET-запит /.</li>
+                <li>Підключити Morgan та налаштувати логування всіх HTTP-запитів у консоль.</li>
+                <li>Інтегрувати Winston для запису логів у файли (error.log та combined.log) з підтримкою рівнів info та error.</li>
+                <li>Реалізувати middleware для обробки помилок з логуванням через Winston та поверненням JSON-відповіді.</li>
+                <li>Реалізувати ендпоінт /upload для завантаження одного файлу за допомогою Multer.</li>
+                <li>Реалізувати ендпоінт /upload-multiple для завантаження кількох файлів.</li>
+                <li>Додати валідацію файлів (дозволені типи: jpg, jpeg, png, pdf, txt та обмеження розміру).</li>
+                <li>Створити ендпоінт /status, який повертає uptime сервера та використання пам’яті (process.memoryUsage()).</li>
+                <li>Реалізувати middleware для вимірювання та логування часу обробки кожного запиту.</li>
+                <li>Запустити застосунок через PM2 та продемонструвати моніторинг (pm2 list, pm2 logs, pm2 monit).</li>
+            </ol>
+
+            <h3 id="nonfunc">Нефункціональні вимоги</h3>
+            <ol>
+                <li>Використання структурованого логування (Morgan + Winston) з розділенням логів за рівнями та типами.</li>
+                <li>Безпечне завантаження файлів з валідацією типу та обмеженням розміру.</li>
+                <li>Автоматичне логування часу виконання кожного запиту.</li>
+                <li>Централізована обробка помилок з детальним логуванням.</li>
+                <li>Моніторинг продуктивності в реальному часі (uptime, пам’ять, CPU).</li>
+                <li>Використання PM2 для запуску та управління процесом.</li>
+                <li>Чітке розділення коду та дотримання принципів middleware.</li>
+                <li>Легкість розгортання та тестування на іншому комп’ютері.</li>
+            </ol>
+
+            <h3 id="github-link">Посилання на репозиторій GitHub</h3>
+            <p>
+                <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
+                target="_blank" 
+                style="color:#0066cc; text-decoration:underline; font-weight:bold;">
+                https://github.com/BobruikoOleksii-KPI/backend-2026
+                </a>
+            </p>
+
+            <h3 id="screenshots">Скріншоти роботи</h3>
+
+            <p><strong>Рис. 1.</strong> Запуск базового сервера та логування HTTP-запитів за допомогою Morgan</p>
+            <p>Демонстрація роботи основного сервера на порту 4000 та автоматичного логування всіх запитів через Morgan у консоль.</p>
+            <img src="backend/screenshots/lr4-ssh1-1.PNG">
+            <img src="backend/screenshots/lr4-ssh1-2.PNG">
+
+            <p><strong>Рис. 2.</strong> Файлове логування подій за допомогою Winston</p>
+            <p>Створено файли <code>combined.log</code> та <code>error.log</code>. Winston записує події з часовою міткою та рівнями логування.</p>
+            <img src="backend/screenshots/lr4-ssh2.PNG">
+
+            <p><strong>Рис. 3.</strong> Обробка помилок з логуванням через Winston</p>
+            <p>При виникненні помилки (ендпоінт /error) система логує її у <code>error.log</code> та повертає користувачу JSON-відповідь.</p>
+            <img src="backend/screenshots/lr4-ssh3.PNG">
+
+            <p><strong>Рис. 4.</strong> Завантаження одного файлу за допомогою Multer</p>
+            <p>Успішне завантаження файлу через ендпоінт <code>/upload</code>. Файл зберігається в папку <code>uploads/</code> з часовою міткою.</p>
+            <img src="backend/screenshots/lr4-ssh4.PNG">
+
+            <p><strong>Рис. 5.</strong> Завантаження кількох файлів одночасно</p>
+            <p>Робота ендпоінту <code>/upload-multiple</code>. Підтримка одночасного завантаження до 5 файлів.</p>
+            <img src="backend/screenshots/lr4-ssh5.PNG">
+
+            <p><strong>Рис. 6.</strong> Валідація файлів (перевірка типу та розміру)</p>
+            <p>При спробі завантажити файл недозволеного типу (наприклад .exe) Multer відхиляє запит з чітким повідомленням про помилку.</p>
+            <img src="backend/screenshots/lr4-ssh6.PNG">
+
+            <p><strong>Рис. 7.</strong> Моніторинг продуктивності сервера (/status) та робота через PM2</p>
+            <p>Ендпоінт <code>/status</code> повертає uptime та використання пам’яті. Нижче — моніторинг через PM2 (<code>pm2 monit</code> та <code>pm2 list</code>).</p>
+            <img src="backend/screenshots/lr4-ssh7.PNG">
+
+            <h3 id="conclusion">Висновок</h3>
+            <p>В ході виконання лабораторної роботи №4 було успішно реалізовано розширені можливості Node.js-додатків. Було налаштовано повноцінне логування HTTP-запитів за допомогою Morgan та професійне файлове логування подій і помилок за допомогою Winston. Реалізовано безпечне завантаження файлів (одного та кількох) з використанням Multer, включаючи валідацію типів файлів та обмеження розміру.</p>
+            <p>Також було впроваджено моніторинг продуктивності сервера: створено ендпоінт <code>/status</code> для отримання uptime та використання пам’яті, а також middleware для вимірювання часу обробки кожного запиту. Застосунок успішно запущено та протестовано через менеджер процесів PM2.</p>
+            <p>Всі 10 практичних завдань лабораторної роботи виконано. Отримані знання та навички дозволяють створювати надійні, контрольовані та масштабовані серверні застосунки, що є важливою частиною сучасної backend-розробки. Розроблений у рамках лабораторної роботи функціонал може бути легко інтегрований у більші проєкти, такі як FilmHub.</p>
+
+        </div>
+    </div>
+
+</body>
+</html>

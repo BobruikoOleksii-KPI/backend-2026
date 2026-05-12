@@ -3,12 +3,14 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const NodeCache = require('node-cache');
+const compression = require('compression');
 
 const app = express();
 const PORT = 5000;
 
 app.use(express.json());
 app.use(helmet());
+app.use(compression({ threshold: 0 }));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -17,8 +19,8 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ====================== Caching with node-cache ======================
-const cache = new NodeCache({ stdTTL: 60 }); // cache for 60 seconds
+// Caching
+const cache = new NodeCache({ stdTTL: 60 });
 
 // Sample films data
 let films = [
@@ -27,26 +29,35 @@ let films = [
   { id: 3, title: "Interstellar", director: "Christopher Nolan", year: 2014, rating: 8.6 }
 ];
 
-// ====================== GET all films with cache ======================
+// ====================== Optimized GET /films with pagination & cache ======================
 app.get('/films', (req, res) => {
-  const cachedFilms = cache.get('films');
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
 
-  if (cachedFilms) {
-    return res.json({ 
-      source: 'cache', 
-      data: cachedFilms 
-    });
+  // Create cache key based on query params
+  const cacheKey = `films-page-${page}-limit-${limit}`;
+
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    return res.json({ source: 'cache', page, limit, data: cached });
   }
 
-  // Cache miss - store and return
-  cache.set('films', films);
-  res.json({ 
-    source: 'database', 
-    data: films 
+  const paginatedFilms = films.slice(startIndex, endIndex);
+
+  cache.set(cacheKey, paginatedFilms);
+
+  res.json({
+    source: 'database',
+    page,
+    limit,
+    total: films.length,
+    data: paginatedFilms
   });
 });
 
-// ====================== POST new film with validation ======================
+// POST new film with validation
 app.post('/films',
   body('title').trim().isLength({ min: 2 }).withMessage('Title must be at least 2 characters'),
   body('director').trim().isLength({ min: 2 }).withMessage('Director must be at least 2 characters'),
@@ -70,9 +81,7 @@ app.post('/films',
     };
 
     films.push(newFilm);
-    
-    // Invalidate cache so next GET gets fresh data
-    cache.del('films');
+    cache.flushAll();   // Invalidate all cache on new film
 
     res.status(201).json(newFilm);
   }

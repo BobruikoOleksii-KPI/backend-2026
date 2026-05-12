@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №6 – FilmHub Backend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            padding: 2rem 0;
+            border-bottom: 1px solid #222;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin-bottom: 12px;
+        }
+        .sidebar ul a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar ul a:hover {
+            color: var(--accent);
+        }
+        .main-content {
+            flex: 1;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .title-page {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        h2 { font-size: 1.8rem; margin: 50px 0 25px; color: white; }
+        h3 { font-size: 1.3rem; margin: 35px 0 15px; color: var(--accent); }
+        p { margin-bottom: 18px; }
+        pre {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ</h1>
+        <p style="margin-top:10px; color:#888;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+    </div>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h3>Зміст</h3>
+            <ul>
+                <li><a href="#intro">Вибір предметної області</a></li>
+                <li><a href="#relevance">Актуальність теми</a></li>
+                <li><a href="#goal">Мета роботи</a></li>
+                <li><a href="#tasks">Завдання роботи</a></li>
+                <li><a href="#object">Об’єкт роботи</a></li>
+                <li><a href="#subject">Предмет роботи</a></li>
+                <li><a href="#business">Бізнес-логіка</a></li>
+                <li><a href="#func">Функціональні вимоги</a></li>
+                <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
+                <li><a href="#screenshots">Скріншоти</a></li>
+                <li><a href="#conclusion">Висновок</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+
+            <div class="title-page" style="display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+                <div style="flex: 1;">
+                    <div class="university">
+                        Міністерство освіти і науки України<br>
+                        Національний технічний університет України<br>
+                        «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+                        Факультет інформатики та обчислювальної техніки<br>
+                        Кафедра обчислювальної техніки
+                    </div>
+
+                    <div class="lab-number">
+                        ЛАБОРАТОРНА РОБОТА № 6
+                    </div>
+        
+                    <div class="discipline">
+                        з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+                        на тему «Документування API за допомогою Swagger Деплой Node.js-додатку. Підсумковий проєкт: REST API з MySQL»
+                    </div>
+
+                    <div class="performer">
+                        <strong>ВИКОНАВ:</strong><br><br>
+                        студент ІІІ курсу ФІОТ<br>
+                        групи <strong>ІО-31</strong><br>
+                        <strong>Бобруйко Олексій</strong>
+                    </div>
+
+                    <div class="reviewer">
+                        <strong>ПЕРЕВІРИВ:</strong><br><br>
+                        <strong>Проскура С.Л.</strong>
+                    </div>
+
+                    <div class="city-year">
+                        Київ – 2026
+                    </div>
+               </div>
+
+                <img src="backend/screenshots/studentphoto.PNG" 
+                     alt="Фото студента" 
+                     style="width: 180px; height: 240px; object-fit: cover; border-radius: 12px; border: 3px solid #222; box-shadow: 0 10px 20px rgba(0,0,0,0.6);">
+            </div>
+
+            <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
+
+            <<h3 id="relevance">Актуальність теми</h3>
+            <p>У сучасній розробці backend-додатків чітка та актуальна документація API є критичним фактором успішної командної роботи, інтеграції frontend- та mobile-клієнтів, а також швидкого тестування й підтримки проєкту. Swagger (OpenAPI) став промисловим стандартом для автоматичної генерації інтерактивної документації. Крім того, вміння розгортати Node.js-застосунок на хмарному сервісі є обов’язковою навичкою для сучасного backend-розробника. Лабораторна робота №6 є підсумковою і поєднує документування REST API, роботу з MySQL та деплой реального проєкту FilmHub.</p>
+
+            <h3 id="goal">Мета роботи</h3>
+            <p>Метою лабораторної роботи є освоєння принципів документування REST API за допомогою Swagger/OpenAPI, інтеграція Swagger UI у Node.js + Express застосунок, створення повноцінної документації всіх endpoint-ів, а також демонстрація підсумкового проєкту — REST API з MySQL.</p>
+
+            <h3 id="tasks">Завдання роботи</h3>
+            <ol>
+                <li>Створити REST API на Node.js + Express (використовуючи код з попередніх лабораторних робіт).</li>
+                <li>Підключити MySQL та реалізувати повноцінні CRUD-операції.</li>
+                <li>Інтегрувати Swagger UI у проєкт.</li>
+                <li>Задокументувати всі наявні endpoint-и за допомогою JSDoc-коментарів (@swagger).</li>
+                <li>Виконати тестування API безпосередньо через Swagger UI.</li>
+                <li>Продемонструвати підсумковий проєкт: REST API з MySQL та повною Swagger-документацією.</li>
+            </ol>
+
+            <h3 id="object">Об’єкт роботи</h3>
+            <p>Процес розробки, документування та демонстрації повноцінного REST API на базі Node.js + Express з підключенням до бази даних MySQL. Об’єктом роботи є підсумковий проєкт FilmHub — серверна частина веб-застосунку для управління даними про фільми та користувачів з повноцінною автентифікацією, CRUD-операціями та інтерактивною документацією.</p>
+
+            <h3 id="subject">Предмет роботи</h3>
+            <p>Інструменти та технології для документування REST API: бібліотеки swagger-jsdoc та swagger-ui-express, специфікація OpenAPI 3.0, JSDoc-коментарі (@swagger), інтеграція Swagger UI у Express-застосунок, а також тестування API безпосередньо через веб-інтерфейс Swagger UI.</p>
+
+            <h3 id="business">Бізнес-логіка роботи</h3>
+            <p>Бізнес-логіка лабораторної роботи полягає у створенні професійного, добре документованого та легко підтримуваого backend-застосунку. Якісна документація API значно прискорює розробку frontend- та mobile-клієнтів, полегшує командну роботу, спрощує інтеграцію з іншими сервісами та дозволяє швидко тестувати ендпоінти без використання Postman. Підсумковий проєкт FilmHub з MySQL та Swagger демонструє готовність до реального використання в production-середовищі.</p>           
+            
+            <h3 id="func">Функціональні вимоги</h3>
+            <ol>
+                <li>Створити повноцінний REST API на Node.js + Express з підтримкою JSON.</li>
+                <li>Підключити базу даних MySQL та реалізувати CRUD-операції над сутностями (користувачі, пости/фільми).</li>
+                <li>Інтегрувати Swagger UI у проєкт за допомогою swagger-jsdoc та swagger-ui-express.</li>
+                <li>Задокументувати всі наявні endpoint-и за допомогою JSDoc-коментарів (@swagger).</li>
+                <li>Реалізувати автентифікацію та захищені маршрути (JWT + middleware).</li>
+                <li>Виконати повне тестування API безпосередньо через інтерактивний інтерфейс Swagger UI.</li>
+                <li>Продемонструвати підсумковий проєкт — FilmHub REST API з MySQL та повною Swagger-документацією.</li>
+            </ol>
+
+            <h3 id="nonfunc">Нефункціональні вимоги</h3>
+            <ol>
+                <li>Повна інтерактивна документація всіх endpoint-ів у форматі OpenAPI 3.0.</li>
+                <li>Підтримка Bearer JWT авторизації в Swagger UI (кнопка Authorize).</li>
+                <li>Чітке розділення коду, використання middleware та дотримання принципів REST.</li>
+                <li>Можливість тестування всіх маршрутів безпосередньо в браузері без Postman.</li>
+                <li>Коректна обробка помилок та повернення зрозумілих повідомлень.</li>
+                <li>Сумісність з попередніми лабораторними роботами (автентифікація, Sequelize, CRUD).</li>
+                <li>Легкість розгортання та запуску проєкту на будь-якому комп’ютері.</li>
+            </ol>
+
+            <h3 id="github-link">Посилання на репозиторій GitHub</h3>
+            <p>
+                <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
+                target="_blank" 
+                style="color:#0066cc; text-decoration:underline; font-weight:bold;">
+                https://github.com/BobruikoOleksii-KPI/backend-2026
+                </a>
+            </p>
+
+            <h3 id="screenshots">Скріншоти роботи</h3>
+
+            <p><strong>Рис. 1.</strong> Запуск сервера та головна сторінка Swagger UI</p>
+            <p>Сервер FilmHub запущено на порту 3000. Відкрито інтерактивну документацію API за адресою <code>/api-docs</code>.</p>
+            <img src="backend/screenshots/lr6-1-swagger-main.png">
+
+            <p><strong>Рис. 2.</strong> Авторизація в Swagger UI (Bearer JWT)</p>
+            <p>Натискання кнопки Authorize та введення JWT-токена для доступу до захищених маршрутів.</p>
+            <img src="backend/screenshots/lr6-2-authorize.png">
+
+            <p><strong>Рис. 3.</strong> Реєстрація користувача через Swagger UI</p>
+            <p>Успішне виконання POST /register безпосередньо в Swagger.</p>
+            <img src="backend/screenshots/lr6-3-register.png">
+
+            <p><strong>Рис. 4.</strong> Авторизація користувача (POST /login)</p>
+            <p>Отримання accessToken та refreshToken після логіну через Swagger.</p>
+            <img src="backend/screenshots/lr6-4-login.png">
+
+            <p><strong>Рис. 5.</strong> Перегляд профілю (GET /profile — захищений маршрут)</p>
+            <p>Успішний доступ до захищеного ендпоінту після авторизації.</p>
+            <img src="backend/screenshots/lr6-5-profile.png">
+
+            <p><strong>Рис. 6.</strong> Отримання всіх постів (GET /posts)</p>
+            <p>Перегляд списку постів з бази даних MySQL через Swagger UI.</p>
+            <img src="backend/screenshots/lr6-6-get-posts.png">
+
+            <p><strong>Рис. 7.</strong> Створення нового поста (POST /posts)</p>
+            <p>Успішне створення поста через Swagger з автоматичним збереженням у MySQL.</p>
+            <img src="backend/screenshots/lr6-7-post-post.png">
+
+            <p><strong>Рис. 8.</strong> Повний CRUD постів (GET /posts/{id}, PUT, DELETE)</p>
+            <p>Демонстрація читання, оновлення та видалення поста за ID.</p>
+            <img src="backend/screenshots/lr6-8_1-posts-crud.png">
+            <img src="backend/screenshots/lr6-8_2-posts-crud.png">
+            <img src="backend/screenshots/lr6-8_3-posts-crud.png">
+
+            <h3 id="conclusion">Висновок</h3>
+            <p>В ході виконання лабораторної роботи №6 було успішно завершено підсумковий проєкт курсу. На базі раніше розробленого REST API FilmHub з підключенням до MySQL було інтегровано сучасну систему документування — Swagger/OpenAPI. Всі ключові ендпоінти (автентифікація, CRUD-операції з постами, захищені маршрути) були повністю задокументовані за допомогою JSDoc-коментарів та стали доступними через інтерактивний інтерфейс Swagger UI.</p>
+            <p>Особливо варто відзначити зручність тестування API безпосередньо в браузері без використання Postman, а також коректну роботу Bearer JWT авторизації в Swagger. Отримані знання та навички дозволяють створювати професійні, добре документовані та легко підтримувані backend-системи, готові до використання в реальних командних проєктах.</p>
+            <p>Лабораторна робота №6 продемонструвала повний цикл backend-розробки: від створення REST API з базою даних MySQL до сучасного документування та тестування. Всі поставлені завдання виконано успішно.</p>
+
+        </div>
+    </div>
+
+</body>
+</html>

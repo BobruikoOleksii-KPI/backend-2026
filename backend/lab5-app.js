@@ -87,6 +87,8 @@ app.post('/films',
   }
 );
 
+module.exports = app;
+
 app.get('/', (req, res) => {
   res.send('Lab 5 server is running on port 5000');
 });

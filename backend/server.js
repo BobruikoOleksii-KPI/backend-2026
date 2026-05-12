@@ -10,6 +10,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 // =======================================================
 
+// ====================== LAB 6 SWAGGER DOCUMENTATION ======================
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+// ======================================================================
+
 const app = express();
 app.use(express.json());
 
@@ -17,10 +22,23 @@ app.use(express.json());
 
 const SECRET_KEY = "secret123";
 
-// ====================== Auth Middleware ======================
+// ====================== Auth Middleware (fixed for Swagger) ======================
 const authenticateToken = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(401).json({ message: "Немає токена" });
+  const authHeader = req.headers["authorization"];
+  
+  if (!authHeader) {
+    return res.status(401).json({ message: "Немає токена" });
+  }
+
+  // Support both "Bearer xxx" and just "xxx"
+  const token = authHeader.startsWith("Bearer ") 
+    ? authHeader.split(" ")[1] 
+    : authHeader;
+
+  if (!token) {
+    return res.status(401).json({ message: "Немає токена" });
+  }
+
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
     req.user = decoded;
@@ -29,6 +47,7 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ message: "Невірний токен" });
   }
 };
+// ======================================================================
 
 // ====================== Login attempts limiter ======================
 const loginAttempts = {};
@@ -377,6 +396,237 @@ app.put("/reset-password", async (req, res) => {
 
 const PORT = 3000;
 
+// ====================== LAB 6: SWAGGER CONFIG ======================
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'FilmHub Backend API',
+      version: '1.0.0',
+      description: 'Повноцінний REST API з MySQL, автентифікацією та Swagger документацією',
+    },
+    servers: [{ url: 'http://localhost:3000' }],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
+  },
+  apis: ['./server.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// ======================  SWAGGER DOCUMENTATION ======================
+
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Реєстрація нового користувача
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email: { type: string, example: "test@example.com" }
+ *               password: { type: string, example: "123456" }
+ *               confirmPassword: { type: string, example: "123456" }
+ *     responses:
+ *       201: { description: Користувача створено }
+ *       400: { description: Помилка валідації }
+ */
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Авторизація користувача
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email: { type: string }
+ *               password: { type: string }
+ *     responses:
+ *       200: { description: Успішний вхід, повертає токени }
+ *       401: { description: Невірні дані }
+ */
+
+/**
+ * @swagger
+ * /profile:
+ *   get:
+ *     summary: Отримати профіль користувача (захищений)
+ *     tags: [Auth]
+ *     security: [{ BearerAuth: [] }]
+ *     responses:
+ *       200: { description: Дані профілю }
+ *       401: { description: Невірний токен }
+ */
+
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: Отримати всі пости
+ *     tags: [Posts]
+ *     responses:
+ *       200: { description: Список постів }
+ *   post:
+ *     summary: Створити новий пост
+ *     tags: [Posts]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title: { type: string }
+ *               content: { type: string }
+ *     responses:
+ *       201: { description: Пост створено }
+ */
+
+/** @swagger
+ * /posts/{id}:
+ *   get:
+ *     summary: Отримати пост за ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200: { description: Пост знайдено }
+ *       404: { description: Пост не знайдено }
+ * 
+ *   put:
+ *     summary: Оновити пост
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title: { type: string }
+ *               content: { type: string }
+ *     responses:
+ *       200: { description: Пост оновлено }
+ * 
+ *   delete:
+ *     summary: Видалити пост
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200: { description: Пост видалено }
+ */
+
+/**
+ * @swagger
+ * /refresh:
+ *   post:
+ *     summary: Оновити access token за допомогою refresh token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken: { type: string }
+ *     responses:
+ *       200: { description: Новий access token }
+ *       401: { description: Невірний refresh token }
+ */
+
+/**
+ * @swagger
+ * /change-password:
+ *   put:
+ *     summary: Зміна пароля (захищений)
+ *     tags: [Auth]
+ *     security: [{ BearerAuth: [] }]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword: { type: string }
+ *               newPassword: { type: string }
+ *               confirmNewPassword: { type: string }
+ *     responses:
+ *       200: { description: Пароль змінено }
+ */
+
+/**
+ * @swagger
+ * /forgot-password:
+ *   post:
+ *     summary: Запит на відновлення пароля
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email: { type: string }
+ *     responses:
+ *       200: { description: Reset token згенеровано }
+ */
+
+/**
+ * @swagger
+ * /reset-password:
+ *   put:
+ *     summary: Зміна пароля за reset token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               resetToken: { type: string }
+ *               newPassword: { type: string }
+ *               confirmNewPassword: { type: string }
+ *     responses:
+ *       200: { description: Пароль успішно змінено }
+ */
+// ======================================================================
+
 // ====================== DATABASE SYNC ======================
 sequelize.sync({ force: true })
     .then(() => console.log('Sequelize tables synced successfully'))
@@ -385,9 +635,10 @@ sequelize.sync({ force: true })
 // ====================== BASIC ROUTE ======================
 app.get('/', (req, res) => {
     res.json({ 
-        message: 'FilmHub Backend is running (Sequelize + raw mysql2)' 
+        message: 'FilmHub Backend is running (Sequelize + raw mysql2)',
+        swagger: `http://localhost:${PORT}/api-docs`
     });
-});
+});;
 
 // ====================== TEST ROUTE ======================
 app.get('/test', async (req, res) => {

@@ -50,3 +50,10 @@
 {"level":"info","message":"File uploaded: 1778077207774-testfile.txt","timestamp":"2026-05-06 17:20:07"}
 {"level":"info","message":"Uploaded 3 files","timestamp":"2026-05-06 17:20:40"}
 {"level":"error","message":"Error: Дозволені тільки файли: jpg, jpeg, png, pdf, txt | Path: /upload","timestamp":"2026-05-06 17:21:25"}
+{"level":"info","message":"Lab 4 server started successfully","timestamp":"2026-05-07 10:30:19"}
+{"level":"info","message":"GET / - 3ms","timestamp":"2026-05-07 10:30:24"}
+{"level":"info","message":"File uploaded: 1778139055423-testfile.txt","timestamp":"2026-05-07 10:30:55"}
+{"level":"info","message":"Uploaded 3 files","timestamp":"2026-05-07 10:31:58"}
+{"level":"error","message":"Error: Дозволені тільки файли: jpg, jpeg, png, pdf, txt | Path: /upload","timestamp":"2026-05-07 10:32:26"}
+{"level":"info","message":"Status checked - Uptime: 152.70s","timestamp":"2026-05-07 10:32:51"}
+{"level":"info","message":"GET /favicon.ico - 1ms","timestamp":"2026-05-07 10:32:51"}

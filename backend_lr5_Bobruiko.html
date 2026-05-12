@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №5 – FilmHub Backend</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=PT+Serif:wght@400;700&display=swap');
+        
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --text: #e0e0e0;
+            --accent: #00d4ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            padding: 2rem 0;
+            border-bottom: 1px solid #222;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+        .sidebar {
+            width: 280px;
+            background: var(--card);
+            padding: 30px 20px;
+            border-radius: 12px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin-bottom: 12px;
+        }
+        .sidebar ul a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar ul a:hover {
+            color: var(--accent);
+        }
+        .main-content {
+            flex: 1;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 12px;
+        }
+        .title-page {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+        h2 { font-size: 1.8rem; margin: 50px 0 25px; color: white; }
+        h3 { font-size: 1.3rem; margin: 35px 0 15px; color: var(--accent); }
+        p { margin-bottom: 18px; }
+        pre {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ЗВІТИ З ЛАБОРАТОРНИХ РОБІТ</h1>
+        <p style="margin-top:10px; color:#888;">з дисципліни «Web-орієнтовані технології. Backend-розробки»</p>
+    </div>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h3>Зміст</h3>
+            <ul>
+                <li><a href="#intro">Вибір предметної області</a></li>
+                <li><a href="#relevance">Актуальність теми</a></li>
+                <li><a href="#goal">Мета роботи</a></li>
+                <li><a href="#tasks">Завдання роботи</a></li>
+                <li><a href="#object">Об’єкт роботи</a></li>
+                <li><a href="#subject">Предмет роботи</a></li>
+                <li><a href="#business">Бізнес-логіка</a></li>
+                <li><a href="#func">Функціональні вимоги</a></li>
+                <li><a href="#nonfunc">Нефункціональні вимоги</a></li>
+                <li><a href="#screenshots">Скріншоти</a></li>
+                <li><a href="#conclusion">Висновок</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+
+            <div class="title-page" style="display: flex; align-items: center; justify-content: space-between; gap: 40px;">
+                <div style="flex: 1;">
+                    <div class="university">
+                        Міністерство освіти і науки України<br>
+                        Національний технічний університет України<br>
+                        «Київський політехнічний інститут ім. Ігоря Сікорського»<br>
+                        Факультет інформатики та обчислювальної техніки<br>
+                        Кафедра обчислювальної техніки
+                    </div>
+
+                    <div class="lab-number">
+                        ЛАБОРАТОРНА РОБОТА № 5
+                    </div>
+        
+                    <div class="discipline">
+                        з дисципліни «Web-орієнтовані технології. Backend-розробки»<br>
+                        на тему «Безпека та продуктивність серверних додатків. Безпека Node.js-додатків. Оптимізація запитів і кешування. Тестування API»
+                    </div>
+
+                    <div class="performer">
+                        <strong>ВИКОНАВ:</strong><br><br>
+                        студент ІІІ курсу ФІОТ<br>
+                        групи <strong>ІО-31</strong><br>
+                        <strong>Бобруйко Олексій</strong>
+                    </div>
+
+                    <div class="reviewer">
+                        <strong>ПЕРЕВІРИВ:</strong><br><br>
+                        <strong>Проскура С.Л.</strong>
+                    </div>
+
+                    <div class="city-year">
+                        Київ – 2026
+                    </div>
+               </div>
+
+                <img src="backend/screenshots/studentphoto.PNG" 
+                     alt="Фото студента" 
+                     style="width: 180px; height: 240px; object-fit: cover; border-radius: 12px; border: 3px solid #222; box-shadow: 0 10px 20px rgba(0,0,0,0.6);">
+            </div>
+
+            <h2 id="intro">Вибір предметної області. Аналіз, моделювання та розроблення адаптивного web-застосунку.</h2>
+
+            <h3 id="relevance">Актуальність теми</h3>
+            <p>У сучасних умовах стрімкого розвитку веб-додатків питання безпеки та продуктивності серверної частини набуває критичного значення. Зростання кількості користувачів, збільшення обсягів даних та постійні кіберзагрози вимагають від розробників впровадження ефективних механізмів захисту (Helmet, rate limiting, JWT) та оптимізації (кешування, стиснення відповідей, пагінація). Лабораторна робота №5 присвячена вивченню та практичному застосуванню сучасних інструментів Node.js/Express для забезпечення безпеки та підвищення продуктивності REST API.</p>
+
+            <h3 id="goal">Мета роботи</h3>
+            <p>Метою лабораторної роботи було забезпечення базової безпеки Node.js-додатків, оптимізація продуктивності REST API, використання кешування для зменшення навантаження на сервер, тестування API за допомогою сучасних інструментів та аналіз продуктивності backend-застосунків.</p>
+
+            <h3 id="tasks">Завдання роботи</h3>
+            <ol>
+                <li>Створити REST API на Node.js та Express.</li>
+                <li>Реалізувати захист API: Helmet, rate limiting, валідацію даних.</li>
+                <li>Реалізувати кешування відповідей (node-cache).</li>
+                <li>Оптимізувати один із маршрутів API (пагінація + стиснення).</li>
+                <li>Провести тестування API (Postman + Jest + Supertest).</li>
+                <li>Проаналізувати продуктивність до та після оптимізації.</li>
+                <li>Додатково реалізувати: JWT-автентифікацію, Swagger документацію та навантажувальне тестування через Artillery.</li>
+            </ol>
+
+            <h3 id="object">Об’єкт роботи</h3>
+            <p>Процес розробки та оптимізації серверного застосунку на базі Node.js та Express.js з акцентом на безпеку та продуктивність. Об’єктом роботи є REST API FilmHub — адаптивний веб-застосунок для управління даними про фільми, що включає автентифікацію, кешування, валідацію, стиснення відповідей та моніторинг продуктивності.</p>
+
+            <h3 id="subject">Предмет роботи</h3>
+            <p>Сучасні технології та інструменти забезпечення безпеки й продуктивності Node.js-додатків: Helmet для захисту HTTP-заголовків, express-rate-limit для захисту від надмірних запитів, express-validator для валідації даних, node-cache для кешування, compression для стиснення відповідей, JWT для автентифікації, Swagger для документації API та Artillery для навантажувального тестування.</p>
+
+            <h3 id="business">Бізнес-логіка роботи</h3>
+            <p>Бізнес-логіка лабораторної роботи полягає в створенні надійного, захищеного та високопродуктивного backend-застосунку, здатного витримувати реальне навантаження. Впровадження механізмів безпеки (JWT, rate limiting, Helmet) захищає API від поширених атак, кешування та стиснення зменшують навантаження на сервер і прискорюють відповіді для користувачів, а інструменти тестування та моніторингу (Jest, Supertest, Artillery, performance-test) дозволяють виявляти вузькі місця та забезпечувати стабільну роботу застосунку в умовах реальної експлуатації.</p>
+            
+            <h3 id="func">Функціональні вимоги</h3>
+            <ol>
+                <li>Створити REST API на Node.js та Express з ендпоінтами для управління даними про фільми (/films).</li>
+                <li>Реалізувати захист API: Helmet для HTTP-заголовків, express-rate-limit для обмеження запитів та express-validator для валідації даних.</li>
+                <li>Реалізувати кешування відповідей за допомогою node-cache з автоматичною інвалідацією після змін.</li>
+                <li>Оптимізувати маршрут /films: додати пагінацію та стиснення відповідей за допомогою compression middleware.</li>
+                <li>Провести тестування API за допомогою Postman, Jest та Supertest.</li>
+                <li>Реалізувати ендпоінт /performance-test для аналізу продуктивності з і без кешу.</li>
+                <li>Додатково реалізувати JWT-автентифікацію (/register, /login + захищені маршрути).</li>
+                <li>Додатково реалізувати інтерактивну документацію API за допомогою Swagger/OpenAPI.</li>
+                <li>Додатково виконати навантажувальне тестування через Artillery.</li>
+            </ol>
+
+            <h3 id="nonfunc">Нефункціональні вимоги</h3>
+            <ol>
+                <li>Забезпечення базової безпеки застосунку (захист заголовків, обмеження запитів, валідація вхідних даних, JWT-автентифікація).</li>
+                <li>Підвищення продуктивності за рахунок кешування, пагінації та стиснення відповідей (gzip/br).</li>
+                <li>Можливість моніторингу продуктивності в реальному часі (час виконання, використання пам’яті).</li>
+                <li>Автоматизоване тестування та навантажувальне тестування для перевірки стабільності під навантаженням.</li>
+                <li>Зручна інтерактивна документація API (Swagger UI).</li>
+                <li>Чітке розділення коду, використання middleware та дотримання принципів REST.</li>
+                <li>Легкість розгортання та тестування на будь-якому комп’ютері з Node.js.</li>
+                <li>Стійкість до поширених веб-загроз (rate limiting, валідація, захищені токени).</li>
+            </ol>
+
+            <h3 id="github-link">Посилання на репозиторій GitHub</h3>
+            <p>
+                <a href="https://github.com/BobruikoOleksii-KPI/backend-2026" 
+                target="_blank" 
+                style="color:#0066cc; text-decoration:underline; font-weight:bold;">
+                https://github.com/BobruikoOleksii-KPI/backend-2026
+                </a>
+            </p>
+
+            <h3 id="screenshots">Скріншоти роботи</h3>
+
+            <h3 id="screenshots">Скріншоти роботи</h3>
+
+            <p><strong>Рис. 1.</strong> Запуск сервера та робота основного ендпоінту /films</p>
+            <p>Сервер успішно запущено на порту 5000. Демонстрація отримання списку фільмів з бази даних.</p>
+            <img src="backend/screenshots/lr5-1-server-films.png" alt="Запуск сервера та /films">
+
+            <p><strong>Рис. 2.</strong> Реєстрація та автентифікація користувача (JWT)</p>
+            <p>Робота ендпоінтів /register та /login. Отримання JWT-токена після успішного логіну.</p>
+            <img src="backend/screenshots/lr5-2-jwt-register-login.png" alt="JWT реєстрація та логін">
+
+            <p><strong>Рис. 3.</strong> Захищений доступ до /films з використанням JWT-токена</p>
+            <p>Успішний запит до захищеного маршруту /films після додавання заголовка Authorization: Bearer ...</p>
+            <img src="backend/screenshots/lr5-3-protected-films.png" alt="Захищений GET /films">
+
+            <p><strong>Рис. 4.</strong> Створення нового фільму (POST /films) з валідацією</p>
+            <p>Успішне додавання фільму через захищений ендпоінт з валідацією даних.</p>
+            <img src="backend/screenshots/lr5-4-post-film.png" alt="POST /films">
+
+            <p><strong>Рис. 5.</strong> Аналіз продуктивності (/performance-test)</p>
+            <p>Порівняння часу виконання запитів з кешем і без кешу. Видно значне прискорення при використанні кешу.</p>
+            <img src="backend/screenshots/lr5-5-performance.png" alt="Performance test">
+
+            <p><strong>Рис. 5.</strong> Інтерактивна документація API (Swagger UI)</p>
+            <p>Головна сторінка Swagger-документації з усіма ендпоінтами та можливістю авторизації.</p>
+            <img src="backend/screenshots/lr5-6-swagger-main.png" alt="Swagger UI">
+
+            <p><strong>Рис. 7.</strong> Тестування захищених ендпоінтів через Swagger</p>
+            <p>Виконання запиту до /films після авторизації безпосередньо в Swagger UI.</p>
+            <img src="backend/screenshots/lr5-7-swagger-authorized.png" alt="Swagger з JWT">
+
+            <p><strong>Рис. 9.</strong> Навантажувальне тестування через Artillery</p>
+            <p>Результати Artillery-тесту: статистика запитів, час відповіді та демонстрація роботи rate limiting.</p>
+            <img src="backend/screenshots/lr5-8-artillery.png" alt="Artillery load test">
+
+            <h3 id="conclusion">Висновок</h3>
+            <p>В ході виконання лабораторної роботи №5 було успішно реалізовано комплекс заходів щодо забезпечення безпеки та підвищення продуктивності серверного застосунку на базі Node.js та Express.js. Було впроваджено ключові механізми захисту (Helmet, rate limiting, валідація даних, JWT-автентифікація), оптимізації (кешування з node-cache, стиснення відповідей, пагінація) та тестування API.</p>
+            <p>Додатково реалізовано сучасні інструменти: інтерактивну документацію API за допомогою Swagger та навантажувальне тестування за допомогою Artillery. Проведено порівняльний аналіз продуктивності, який чітко продемонстрував значне прискорення роботи застосунку завдяки кешуванню.</p>
+            <p>Отримані знання та практичні навички дозволяють створювати надійні, захищені та високопродуктивні backend-системи, готові до використання в реальних проєктах. Розроблений FilmHub API може бути легко розширений та інтегрований у повноцінний веб-застосунок.</p>
+            <p>Всі поставлені завдання лабораторної роботи, включаючи додаткові (JWT, Swagger, Artillery), виконано успішно.</p>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 10
+      arrivalRate: 5
+      name: "Warm-up (low load)"
+    - duration: 30
+      arrivalRate: 15
+      name: "Main load test (15 users/sec)"
+
+scenarios:
+  - name: "Protected Films endpoint with real JWT"
+    flow:
+      - get:
+          url: "/films"
+          headers:
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0NjM1NDc4OTY1NDM2Nzg1QGV4YW1wbGUuY29tIiwiaWF0IjoxNzc4NjA0MjQ3LCJleHAiOjE3Nzg2MDc4NDd9.y_iH_hpbvWJEGJMub0BYkUuHFR8Gvxp_Qs9A9KyEQtM"
+          qs:
+            page: 1
+            limit: 10

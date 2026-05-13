@@ -11,11 +11,14 @@
         <div class="container">
             <div class="logo">FilmHub</div>
             <nav>
-                <ul class="nav-menu">
-                    <li><a href="#">Головна</a></li>
-                    <li><a href="#">Каталог</a></li>
-                    <li><a href="#">Жанри</a></li>
-                    <li><a href="#">Про нас</a></li>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#" onclick="navigateTo('home')">Головна</a></li>
+                    <li><a href="#" onclick="navigateTo('catalog')">Каталог</a></li>
+                    <li><a href="#" onclick="navigateTo('genres')">Жанри</a></li>
+                    <li><a href="#" onclick="navigateTo('about')">Про нас</a></li>
+        
+                    <!-- Auth links will be injected by JavaScript -->
+                    <li id="auth-links"></li>
                 </ul>
             </nav>
             <div class="burger" id="burger">
@@ -28,8 +31,29 @@
 
     <main>
         <div class="container">
-            <h1>Популярні фільми</h1>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <h1 style="margin: 0;">Популярні фільми</h1>
+    
+                <input type="text" id="search-input" placeholder="Пошук фільмів..." 
+                       style="flex: 1; max-width: 400px; padding: 12px 16px; border-radius: 8px; border: none; background: #222; color: #fff; font-size: 1rem;">
+
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="setFilter('all')" id="filter-all" 
+                            style="padding: 8px 16px; background: #00d4ff; color: black; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Усі фільми</button>
+                    <button onclick="setFilter('favorites')" id="filter-favorites" 
+                            style="padding: 8px 16px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer;">Мої улюблені</button>
+                </div>
+            </div>
             <div class="movie-grid">
+                <div id="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Завантаження фільмів...</p>
+                    </div>
+    
+                    <!-- Empty state -->
+                    <div id="empty-state">
+                        <p id="empty-message">Немає фільмів</p>
+                    </div>
                 <div class="movie-card"><img src="assets/images/inception.jpg" alt="Inception"><h3>Inception</h3><p>2010 • Sci-Fi • 8.8</p></div>
                 <div class="movie-card"><img src="assets/images/dune.jpg" alt="Dune"><h3>Dune: Part Two</h3><p>2024 • Sci-Fi • 8.7</p></div>
                 <div class="movie-card"><img src="assets/images/oppenheimer.jpg" alt="Oppenheimer"><h3>Oppenheimer</h3><p>2023 • Drama • 8.3</p></div>
@@ -50,5 +74,139 @@
     </footer>
 
     <script src="js/script.js"></script>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 100%; max-width: 420px; color: #fff;">
+            <h2 id="modal-title" style="margin-bottom: 1rem;">Увійти</h2>
+            
+            <div id="login-form">
+                <input type="email" id="login-email" placeholder="Email" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <input type="password" id="login-password" placeholder="Пароль" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #e50914; color: white; border: none; border-radius: 6px; margin-top: 10px; cursor: pointer;">Увійти</button>
+            </div>
+
+            <div id="register-form" style="display: none;">
+                <input type="email" id="register-email" placeholder="Email" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <input type="password" id="register-password" placeholder="Пароль" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <input type="password" id="register-confirm" placeholder="Підтвердіть пароль" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <button onclick="handleRegister()" style="width: 100%; padding: 12px; background: #e50914; color: white; border: none; border-radius: 6px; margin-top: 10px; cursor: pointer;">Зареєструватися</button>
+            </div>
+
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="#" onclick="toggleForms()" id="toggle-link" style="color: #00d4ff;">Немає акаунту? Зареєструватися</a>
+            </div>
+            
+            <button onclick="closeModal()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer;">×</button>
+        </div>
+    </div>
+
+    <!-- Add Post Button -->
+    <div style="text-align: right; margin: 20px 0;">
+        <button onclick="showCreatePostModal()" 
+                id="create-post-btn"
+                style="display: none; background: #e50914; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+            Додати фільм до каталогу
+        </button>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="create-post-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 100%; max-width: 500px; color: #fff;">
+            <h2 style="margin-bottom: 1.5rem;">Додати фільм до каталогу</h2>
+                    
+            <select id="post-image" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <option value="">— Оберіть постер —</option>
+                <option value="inception.jpg">Inception</option>
+                <option value="dune.jpg">Dune: Part Two</option>
+                <option value="oppenheimer.jpg">Oppenheimer</option>
+                <option value="batman.jpg">The Batman</option>
+                <option value="interstellar.jpg">Interstellar</option>
+                <option value="matrix.jpg">The Matrix</option>
+                <option value="parasite.jpg">Parasite</option>
+                <option value="joker.jpg">Joker</option>
+            </select>
+
+            <!-- Genre selector -->
+            <select id="post-genre" style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                <option value="">— Оберіть жанр —</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Drama">Drama</option>
+                <option value="Action">Action</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Crime">Crime</option>
+            </select>
+
+            <input type="text" id="post-title" placeholder="Назва фільму" 
+                   style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+            
+            <textarea id="post-content" placeholder="Короткий опис фільму..." rows="5"
+                      style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff; resize: vertical;"></textarea>
+            
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button onclick="createPost()" 
+                        style="flex: 1; padding: 12px; background: #e50914; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                    Додати фільм
+                </button>
+                <button onclick="closeCreatePostModal()" 
+                        style="flex: 1; padding: 12px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer;">
+                    Скасувати
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Post Modal -->
+    <div id="edit-post-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a1a; padding: 2rem; border-radius: 12px; width: 100%; max-width: 500px; color: #fff;">
+            <h2 style="margin-bottom: 1.5rem;">Редагувати фільм</h2>
+                    
+            <input type="hidden" id="edit-post-id">
+                    
+            <input type="text" id="edit-post-title" placeholder="Назва фільму" 
+                   style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff;">
+                    
+            <textarea id="edit-post-content" placeholder="Опис фільму..." rows="5"
+                      style="width: 100%; padding: 12px; margin: 8px 0; background: #222; border: none; border-radius: 6px; color: #fff; resize: vertical;"></textarea>
+                    
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button onclick="saveEditedPost()" 
+                        style="flex: 1; padding: 12px; background: #00d4ff; color: black; border: none; border-radius: 6px; cursor: pointer;">
+                    Зберегти зміни
+                </button>
+                <button onclick="closeEditModal()" 
+                        style="flex: 1; padding: 12px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer;">
+                    Скасувати
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a1a; padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 620px; color: #fff; max-height: 90vh; overflow-y: auto;">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Профіль</h2>
+            
+            <div id="profile-info" style="margin-bottom: 2rem;">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <h3 style="margin-bottom: 1rem;">Мої улюблені фільми</h3>
+            <div id="profile-favorites" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 2rem;">
+                <!-- Filled by JavaScript -->
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="logout()" 
+                        style="padding: 12px 30px; background: #e50914; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+                    Вийти з акаунту
+                </button>
+                <button onclick="closeProfileModal()" 
+                        style="margin-left: 15px; padding: 12px 30px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer;">
+                    Закрити
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

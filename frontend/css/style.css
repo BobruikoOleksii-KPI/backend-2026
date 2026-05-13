@@ -90,26 +90,52 @@ header .container {
 
 .movie-grid { 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 2rem;
+    padding: 20px 0;
 }
 
 .movie-card { 
     background: #1a1a1a;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s ease;
-    aspect-ratio: 2 / 3;
-}
-
-.movie-card:hover {
-    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
 }
 
 .movie-card img {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    height: 360px;
+    object-fit: cover;        /* prevents distortion */
+    display: block;
+}
+
+.movie-card h3 {
+    padding: 14px 14px 6px;
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.movie-card p {
+    padding: 0 14px 10px;
+    font-size: 0.95rem;
+    color: #ccc;
+    flex-grow: 1;
+    line-height: 1.45;
+}
+
+.movie-card small {
+    padding: 0 14px 14px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Hover effect */
+.movie-card:hover {
+    transform: scale(1.04);
 }
 
 /* Media queries for grid */
@@ -137,4 +163,111 @@ main .container {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
+}
+
+/* ==================== FINAL CARD SIZE FIX ==================== */
+.movie-grid { 
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 1.8rem !important;
+    padding: 20px 0 !important;
+    justify-content: center !important;
+}
+
+.movie-card {
+    width: 260px !important;           /* fixed width */
+    max-width: 280px !important;
+    background: #1a1a1a !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+.movie-card img {
+    width: 100% !important;
+    height: 360px !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+.movie-card h3 {
+    padding: 14px 14px 6px !important;
+    font-size: 1.15rem !important;
+}
+
+.movie-card p {
+    padding: 0 14px 10px !important;
+    font-size: 0.95rem !important;
+    color: #ccc !important;
+    flex-grow: 1 !important;
+}
+
+.movie-card small {
+    padding: 0 14px 14px !important;
+    font-size: 0.85rem !important;
+    color: #888 !important;
+}
+
+.movie-card.hidden {
+    display: none !important;
+}
+
+/* ==================== LOADING + EMPTY STATE ==================== */
+#loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
+}
+
+#loading-spinner .spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #333;
+    border-top: 4px solid #00d4ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#empty-state {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* ==================== CARD HOVER EFFECTS ==================== */
+.movie-card {
+    transition: all 0.3s ease !important;
+}
+
+.movie-card:hover {
+    transform: translateY(-8px) scale(1.03) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.movie-card img {
+    transition: transform 0.4s ease !important;
+}
+
+.movie-card:hover img {
+    transform: scale(1.08) !important;
+}
+
+.movie-card button {
+    transition: all 0.2s ease !important;
+}
+
+.movie-card button:hover {
+    transform: scale(1.1) !important;
 }

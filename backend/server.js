@@ -22,6 +22,14 @@ app.use(express.json());
 
 const SECRET_KEY = "secret123";
 
+const path = require('path');
+
+// ====================== SERVE FRONTEND ======================
+// Serve static frontend files (HTML, CSS, JS, images)
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// =====================================================================
+
 // ====================== Auth Middleware (fixed for Swagger) ======================
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];

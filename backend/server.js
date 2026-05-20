@@ -5,6 +5,69 @@ const mysqlPool = require('./config/database-mysql2');
 const User = require('./models/User');
 const Post = require('./models/Post');
 
+// ==================== DATABASE SEEDING ====================
+async function seedInitialFilms() {
+    const count = await Post.count();
+    
+    if (count === 0) {
+        const initialFilms = [
+            {
+                title: "Inception",
+                content: "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+                image: "inception.jpg",
+                genre: "Sci-Fi"
+            },
+            {
+                title: "Dune: Part Two",
+                content: "Paul Atreides unites Chani and the Fremen while seeking revenge for his father's death and trying to prevent a terrible future.",
+                image: "dune.jpg",
+                genre: "Sci-Fi"
+            },
+            {
+                title: "Oppenheimer",
+                content: "The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.",
+                image: "oppenheimer.jpg",
+                genre: "Drama"
+            },
+            {
+                title: "The Batman",
+                content: "When the Riddler begins murdering key political figures in Gotham, Batman is forced to investigate the mystery and question his own morality.",
+                image: "batman.jpg",
+                genre: "Action"
+            },
+            {
+                title: "Interstellar",
+                content: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival as Earth faces extinction.",
+                image: "interstellar.jpg",
+                genre: "Sci-Fi"
+            },
+            {
+                title: "The Matrix",
+                content: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+                image: "matrix.jpg",
+                genre: "Sci-Fi"
+            },
+            {
+                title: "Parasite",
+                content: "Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.",
+                image: "parasite.jpg",
+                genre: "Thriller"
+            },
+            {
+                title: "Joker",
+                content: "In Gotham City, mentally troubled comedian Arthur Fleck is disregarded by society. He then embarks on a downward spiral of revolution and bloody crime.",
+                image: "joker.jpg",
+                genre: "Drama"
+            }
+        ];
+
+        await Post.bulkCreate(initialFilms);
+        console.log('Initial 8 films seeded successfully');
+    } else {
+        console.log(`ℹDatabase already has ${count} films - skipping seed`);
+    }
+}
+
 // ====================== LAB 3 AUTH ======================
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -636,8 +699,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // ======================================================================
 
 // ====================== DATABASE SYNC ======================
-sequelize.sync({ force: true })
-    .then(() => console.log('Sequelize tables synced successfully'))
+sequelize.sync()
+    .then(async () => {
+        console.log('Sequelize tables synced successfully');
+        await seedInitialFilms();
+    })
     .catch(err => console.error('Sequelize sync error:', err));
 
 // ====================== BASIC ROUTE ======================

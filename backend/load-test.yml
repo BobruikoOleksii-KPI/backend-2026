@@ -14,7 +14,7 @@ scenarios:
       - get:
           url: "/films"
           headers:
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0NjM1NDc4OTY1NDM2Nzg1QGV4YW1wbGUuY29tIiwiaWF0IjoxNzc4NjA3Mzc1LCJleHAiOjE3Nzg2MTA5NzV9.yGR33m7PWqdj8XzqTIayXFwHluGcRATpD1MfLEPlwMM"
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ0ZXN0Nzg5Njg1Nzg0Nzg5NkBleGFtcGxlLmNvbSIsImlhdCI6MTc3ODc0Mjk5NiwiZXhwIjoxNzc4NzQ2NTk2fQ.GumJhD7KX-SvoaqiNOctgGwcMO58lWZRNaCVl8NGgJc"
           qs:
             page: 1
             limit: 10
